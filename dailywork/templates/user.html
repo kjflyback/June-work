@@ -1,14 +1,39 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Bootstrap 101 Template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
-</html>
+{% extends "base.html" %} {% block navbar %}
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="brand" href="#">JUNE'S TASK</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					<li class="active"><a href="#">主页</a></li>
+					<li><a href="#about">关于</a></li>
+					<li><a href="#contact">联系</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+{% endblock %} {% block content %}
+<div class="container">
+	<div class="page-header">
+  <h1>联系资料<small>信息输入</small></h1>
+</div>
+	<div class="well well-small">
+		<form class="form-inline">
+			<span class="label label-info">Info</span>
+			<input type="text" class="input-small input-medium" placeholder="电话号码">
+			<input type="text" class="input-small" placeholder="姓名" />
+			<input type="text" class="input-small" placeholder="来自" />
+			<input type="text" class="input-small" placeholder="所属" />
+			<button type="submit" class="btn btn-primary">保存</button>
+		</form>
+	</div>
+</div>
+<!-- /container -->
+{% endblock %}
