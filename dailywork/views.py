@@ -35,8 +35,8 @@ def index():
                            user=user,
                            posts=posts
                            )
-    print ret
-    return ret
+    # print ret
+    return ret 
 
 @app.route('/data')
 def data_b():
@@ -44,4 +44,4 @@ def data_b():
 
 @app.route('/user')
 def user():
-    return render_template('user.html', name="Dave")
+    return render_template('user.html', name="June")
