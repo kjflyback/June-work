@@ -76,15 +76,16 @@
 			<td>客户</td><td>种类</td><td>联系人</td><td>电话</td><td>手机</td><td>处理分类</td><td>备注</td>
 		</tr>
 		
-		{% for item in page %}
+		{% for item in page.all() %}
 		<tr>
-			<td>{{item.client_name}}</td>
-			<td>{{item.client_type_desc}}</td>
-			<td>{{item.clientinterface_name}}</td>
-			<td>{{item.workflow_telephone}}</td>
-			<td>{{item.workflow_phonenumber}}</td>
-			<td>{{item.group_name}}</td>
-			<td>{{item.workflow_comment}}</td>
+			<td>{{item[0]}}</td>
+			<td>{{item[1]}}</td>
+			<td>{{item[2]}}</td>
+			<td>{{item[3]}}</td>
+			<td>{{item[4]}}</td>
+			<td>{{item[5]}}</td>
+			<td>{{item[6]}}</td>
+			
 		</tr>
 		{% endfor %}		
 	</table>
@@ -94,8 +95,48 @@
 	{% endblock %} {% block finalscript %}
 	<script>
 		$(document).ready(function($) {
-				$.get('/data', '', function(data) {
+				$.get('/data/client', '', function(data) {
 					$('#clientname').typeahead({
+						source: function(query, process) {
+							return JSON.parse(data)
+						},
+						matcher: function(item) {
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						}
+					});
+				});
+				$.get('/data/type', '', function(data) {
+					$('#clienttype').typeahead({
+						source: function(query, process) {
+							return JSON.parse(data)
+						},
+						matcher: function(item) {
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						}
+					});
+				});
+				$.get('/data/interface', '', function(data) {
+					$('#clientinterface').typeahead({
+						source: function(query, process) {
+							return JSON.parse(data)
+						},
+						matcher: function(item) {
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						}
+					});
+				});
+				$.get('/data/tel', '', function(data) {
+					$('#telephone').typeahead({
+						source: function(query, process) {
+							return JSON.parse(data)
+						},
+						matcher: function(item) {
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						}
+					});
+				});
+				$.get('/data/phone', '', function(data) {
+					$('#phone').typeahead({
 						source: function(query, process) {
 							return JSON.parse(data)
 						},

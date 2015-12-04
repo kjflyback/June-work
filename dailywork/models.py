@@ -25,7 +25,7 @@ class Post(db.Model):
     
 class ClientType(db.Model):
     id = db.Column(db.Integer, db.Sequence('clienttype_id_seq'), primary_key = True)
-    desc = db.Column(db.String(64), index=True, default=u'一般')
+    desc = db.Column(db.String(64), index=True, default='general')
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
     def __repr__(self):
         return '<ClientType %r>' % (self.desc)
@@ -34,7 +34,7 @@ class ClientInterface(db.Model):
     __tablename__ = "clientinterface"
     # for person
     id = db.Column(db.Integer, db.Sequence('clientinterface_id_seq'), primary_key = True)
-    name = db.Column(db.String(64), index=True, default=u'无')
+    name = db.Column(db.String(64), index=True, default='No')
     # phonenumber=db.Column(db.String(64), index=True)
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
     def __repr__(self):
@@ -43,7 +43,7 @@ class ClientInterface(db.Model):
 class Group(db.Model):
     __tablename__ = "group"
     id = db.Column(db.Integer, db.Sequence('clienttype_id_seq'), primary_key = True)
-    name = db.Column(db.String(250), index=True, default=u'未分组')
+    name = db.Column(db.String(250), index=True, default='no group')
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
     def __repr__(self):
         return '<Group %r>' % (self.name)

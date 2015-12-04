@@ -1,7 +1,8 @@
 from flask import render_template, flash, redirect
 from . import app, db, models
 from forms import LoginForm, PostForm
-from models import Client, ClientType, ClientInterface, Group
+# from models import Client, ClientType, ClientInterface, Group
+from qdata import QueryData
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -40,16 +41,27 @@ def index():
     return ret 
 
 @app.route('/data')
-def data_b():
-    return render_template('data.txt')
+@app.route('/data/<command>', methods=['GET', 'POST'])
+def data_b(command):
+    print command
+    return QueryData(command)
 
+
+def convertString(obj):
+    retobj = obj
+    for objone in retobj[:]:
+        for field in objone[:]:
+            field = field.encode('utf-8')
+            print field  
+    return retobj 
+ 
 @app.route('/user', methods=['GET', 'POST'])
 @app.route('/user/<int:page>', methods=['GET', 'POST'])
-def user(page = 1):
+def user(page = 0):
     pagequery = db.session.query(
-                         models.Client.name, 
+                         models.Client.name,  
                          models.ClientType.desc, 
-                         models.Group.name, 
+                         models.Group.name,  
                          models.ClientInterface.name,
                          models.WorkFlow.telephone, 
                          models.WorkFlow.phonenumber,
@@ -60,21 +72,25 @@ def user(page = 1):
                           models.Group.id == models.WorkFlow.group_id,
                           models.ClientInterface.id == models.WorkFlow.interface_id
                           )
-    pagedata = pagequery.slice(page * 20, page * 20 + 20)
-    form = PostForm()
+    pagedata = pagequery.slice(page * 20, page * 20 + 20) 
+   
+    # print convertString(pagedata)
+    form = PostForm() 
     # flash("data:clientname:" + str(form.clientname.data) +
       #    "\nclienttype:" +str(form.clienttype.data) +
-       #   "\n")
-    if form.validate_on_submit():
+       #   "\n") 
+    if form.validate_on_submit():  
         # flash("validate ok.")
-        # save first clienttype
+        # save first clienttype 
         # if form.clienttype.data:
             # get ctype from db
         ctype = models.ClientType.query.filter(models.ClientType.desc == form.clienttype.data).first()
         if None == ctype: 
             
-            ctype = models.ClientType(desc=form.clienttype.data)            
-            db.session.add(ctype)
+            ctype = models.ClientType()
+            if form.clienttype.data:
+                ctype.desc = form.clienttype.data     
+            db.session.add(ctype) 
             db.session.commit()
 
                 
@@ -84,7 +100,9 @@ def user(page = 1):
                     models.ClientInterface.name == form.clientinterface.data
                     ).first()
         if None == cinterface :
-            cinterfacequery = models.ClientInterface(name = form.clientinterface.data)
+            cinterface = models.ClientInterface()
+            if form.clientinterface.data:
+                cinterface.name = form.clientinterface.data
             db.session.add(cinterface)
             db.session.commit()
        
@@ -95,7 +113,9 @@ def user(page = 1):
                                           ).first()     
             
         if None == group:
-            group = models.Group(name=form.group.data)           
+            group = models.Group()
+            if form.group.data:
+                group.name=form.group.data
             db.session.add(group)
             db.session.commit()
                 
@@ -124,7 +144,7 @@ def user(page = 1):
         db.session.add(workflow)
         db.session.commit()
         
-        return render_template('user.html', page = pagedata)
+        return render_template('user.html',form=PostForm(), page = pagedata)
     #else:
      #   flash("validate failed.")
         
