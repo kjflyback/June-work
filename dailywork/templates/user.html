@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block navbar %}
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
 			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -7,33 +7,106 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="brand" href="#">JUNE'S TASK</a>
+
+			<a class="brand" href="#">JUNE'S TASK<span class="badge badge-info">3008条</span></a>
 			<div class="nav-collapse collapse">
+
 				<ul class="nav">
 					<li class="active"><a href="#">主页</a></li>
-					<li><a href="#about">关于</a></li>
-					<li><a href="#contact">联系</a></li>
+					<li><a href="#">查看数据</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">管理<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<!-- links -->
+							<li><a href="#">客户名称</a></li>
+							<li><a href="#">种类</a></li>
+							<li><a href="#">联系人</a></li>
+							<li><a href="#">处理分类</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->
 		</div>
 	</div>
 </div>
+
 {% endblock %} {% block content %}
+
 <div class="container">
-	<div class="page-header">
-  <h1>联系资料<small>信息输入</small></h1>
-</div>
 	<div class="well well-small">
-		<form class="form-inline">
-			<span class="label label-info">Info</span>
-			<input type="text" class="input-small input-medium" placeholder="电话号码">
-			<input type="text" class="input-small" placeholder="姓名" />
-			<input type="text" class="input-small" placeholder="来自" />
-			<input type="text" class="input-small" placeholder="所属" />
-			<button type="submit" class="btn btn-primary">保存</button>
+		<div class="page-header">
+			<h1>客户服务<small>信息处理</small></h1>
+		</div>
+
+		<form class="form-inline" id="newline" method="post">
+			<span class="label ">
+				Important
+			</span>
+			{{form.hidden_tag()}}
+			{% for error in form.errors.clientname %}
+			<span class="label label-important">
+			{{error}}
+			</span>
+			{% endfor %}
+			
+			
+			<br> {{form.clientname(class="input-medium", placeholder="客户名称")}} {{form.clienttype(class="input-small", placeholder="种类")}} {{form.clientinterface(class="input-small", placeholder="联系人姓名")}} {{form.telephone(class="input-small", placeholder="电话")}} {{form.phone(class="input-medium",
+			placeholder="手机")}} {{form.group(class="input-small", placeholder="处理分类")}}
+			<button type="submit" class="btn btn-info btn-large"><i class="icon-plus icon-white"></i></button>
+
+			<br> {{form.comment(rows="3", style="width:750px", placeholder="备注")}}
+			<!--
+			<input id="clienttype" type="text" class="input-small" placeholder="种类">
+			<input id="interface" type="text" class="input-small" placeholder="联系人姓名" />
+			<input id="telephone" type="text" class="input-small" placeholder="电话" />
+			<input id="phone" type="text" class="input-small" placeholder="手机" />
+			<input id="conenttype" type="text" class="input-small" placeholder="处理内容分类" /> 保修/维护/巡检
+			</div>
+			<br>
+				<textarea name="comment" class="input-xxlarge" rows="10" placeholder="备注"></textarea>
+			<br>
+				-->
+			</br>
 		</form>
 	</div>
+	{% if page %}
+	<table class="table">
+		<tr>
+			<td>客户</td><td>种类</td><td>联系人</td><td>电话</td><td>手机</td><td>处理分类</td><td>备注</td>
+		</tr>
+		
+		{% for item in page %}
+		<tr>
+			<td>{{item.client_name}}</td>
+			<td>{{item.client_type_desc}}</td>
+			<td>{{item.clientinterface_name}}</td>
+			<td>{{item.workflow_telephone}}</td>
+			<td>{{item.workflow_phonenumber}}</td>
+			<td>{{item.group_name}}</td>
+			<td>{{item.workflow_comment}}</td>
+		</tr>
+		{% endfor %}		
+	</table>
+	{% endif %}
 </div>
-<!-- /container -->
-{% endblock %}
+	<!-- /container -->
+	{% endblock %} {% block finalscript %}
+	<script>
+		$(document).ready(function($) {
+				$.get('/data', '', function(data) {
+					$('#clientname').typeahead({
+						source: function(query, process) {
+							return JSON.parse(data)
+						},
+						matcher: function(item) {
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						}
+					});
+				});
+			}) 
+			// $('#clientname').attr('data-original-title', '{{error}}')
+			// $('#clientname').attr('data-toggle', 'tooltip')
+			// $('#clientname').tooltip('show')
+	</script>
+	{% endblock %}

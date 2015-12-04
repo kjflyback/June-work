@@ -6,6 +6,7 @@
     {% else %}
     <title>Undocumented title</title>
     {% endif %}
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     
@@ -33,5 +34,9 @@
     
     <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='py.js') }}"></script>
+     <script src="{{ url_for('static',filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+     <script src="{{ url_for('static',filename='bootstrap/js/bootstrap-tooltip.js') }}"></script>
+     {% block finalscript %}{% endblock %}
   </body>
 </html>
