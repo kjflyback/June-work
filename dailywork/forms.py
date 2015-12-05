@@ -18,3 +18,4 @@ class PostForm(Form):
     group=TextField('group')
     comment = TextAreaField('comment')
     
+    

@@ -27,8 +27,17 @@ class ClientType(db.Model):
     id = db.Column(db.Integer, db.Sequence('clienttype_id_seq'), primary_key = True)
     desc = db.Column(db.String(64), index=True, default='general')
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
+    
+    
     def __repr__(self):
         return '<ClientType %r>' % (self.desc)
+    def Default(self):
+        default = ClientType.query.filter(ClientType.desc == 'general').first()
+        if None == default:
+            default = ClientType()
+            db.session.add(default)
+            db.session.commit()
+        
 
 class ClientInterface(db.Model):
     __tablename__ = "clientinterface"
@@ -37,16 +46,31 @@ class ClientInterface(db.Model):
     name = db.Column(db.String(64), index=True, default='No')
     # phonenumber=db.Column(db.String(64), index=True)
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
+    
+    
     def __repr__(self):
         return '<ClientInterface %r>' % (self.name)
+    def Default(self):
+        default = ClientInterface.query.filter(ClientInterface.name == 'NO').first()
+        if None == default:
+            default = ClientInterface()
+            db.session.add(default)
+            db.session.commit()
 
 class Group(db.Model):
     __tablename__ = "group"
     id = db.Column(db.Integer, db.Sequence('clienttype_id_seq'), primary_key = True)
     name = db.Column(db.String(250), index=True, default='no group')
     timestamp=db.Column(db.DateTime, default=datetime.datetime.now())
+    
     def __repr__(self):
         return '<Group %r>' % (self.name)
+    def Default(self):
+        default = Group.query.filter(Group.name == 'no group').first()
+        if None == default:
+            default = Group()
+            db.session.add(default)
+            db.session.commit()
     
 class Client(db.Model):   
     __tablename__ = "client" 

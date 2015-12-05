@@ -8,7 +8,7 @@
 				<span class="icon-bar"></span>
 			</button>
 
-			<a class="brand" href="#">JUNE'S TASK<span class="badge badge-info">3008条</span></a>
+			<a class="brand" href="#">JUNE'S TASK<span class="badge badge-info">{{counter}}</span></a>
 			<div class="nav-collapse collapse">
 
 				<ul class="nav">
@@ -24,7 +24,11 @@
 							<li><a href="#">处理分类</a></li>
 						</ul>
 					</li>
+					<li>
+						
+					</li>
 				</ul>
+				
 			</div>
 			<!--/.nav-collapse -->
 		</div>
@@ -33,16 +37,10 @@
 
 {% endblock %} {% block content %}
 
-<div class="container">
-	<div class="well well-small">
-		<div class="page-header">
-			<h1>客户服务<small>信息处理</small></h1>
-		</div>
-
-		<form class="form-inline" id="newline" method="post">
-			<span class="label ">
-				Important
-			</span>
+<div class="containern">
+	<div class=" well-small">
+		<form class="form-inline" id="newline" target="_self" method="post">
+			
 			{{form.hidden_tag()}}
 			{% for error in form.errors.clientname %}
 			<span class="label label-important">
@@ -51,9 +49,13 @@
 			{% endfor %}
 			
 			
-			<br> {{form.clientname(class="input-medium", placeholder="客户名称")}} {{form.clienttype(class="input-small", placeholder="种类")}} {{form.clientinterface(class="input-small", placeholder="联系人姓名")}} {{form.telephone(class="input-small", placeholder="电话")}} {{form.phone(class="input-medium",
-			placeholder="手机")}} {{form.group(class="input-small", placeholder="处理分类")}}
-			<button type="submit" class="btn btn-info btn-large"><i class="icon-plus icon-white"></i></button>
+			<br> {{form.clientname(class="input-medium", placeholder="客户名称")}} 
+				{{form.clienttype(class="input-small", placeholder="种类")}} 
+				{{form.clientinterface(class="input-small", placeholder="联系人姓名")}} 
+				{{form.telephone(class="input-small", placeholder="电话")}} 
+				{{form.phone(class="input-medium",placeholder="手机")}} 
+				{{form.group(class="input-small", placeholder="处理分类")}}
+			<button type="submit" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i></button>
 
 			<br> {{form.comment(rows="3", style="width:750px", placeholder="备注")}}
 			<!--
@@ -71,30 +73,56 @@
 		</form>
 	</div>
 	{% if page %}
-	<table class="table">
-		<tr>
-			<td>客户</td><td>种类</td><td>联系人</td><td>电话</td><td>手机</td><td>处理分类</td><td>备注</td>
-		</tr>
+	<div class="well well-small">
+	<table class="table table-condensed table-striped table-hover ">
+		<thead>
+			<td>日期时间</td><td>客户</td><td>种类</td><td>联系人</td><td>电话</td><td>手机</td><td>处理分类</td><td>备注</td>
+		</thead>
 		
 		{% for item in page.all() %}
 		<tr>
-			<td>{{item[0]}}</td>
+			<td><code>{{item[0].strftime('%Y-%m-%d %H:%M')}}</code></td>
 			<td>{{item[1]}}</td>
 			<td>{{item[2]}}</td>
 			<td>{{item[3]}}</td>
 			<td>{{item[4]}}</td>
 			<td>{{item[5]}}</td>
 			<td>{{item[6]}}</td>
+			<td>{{item[7]}}</td>
 			
 		</tr>
 		{% endfor %}		
 	</table>
+	</div>
+	<div class="pagination pagination-centered pagination-mini">
+  <ul>
+  	{% if current != 0 %}
+  	<li><a href="/user/{{current - 1}}"><span>&laquo;</span></a></li>
+  	{% endif %}
+  	{% for p in range(0, pagecount + 1) %}    
+    <li><a href="/user/{{p}}">{{p + 1}}</a></li>
+   	{% endfor %}
+   	{% if current != pagecount %}
+    <li><a href="/user/{{current + 1}}"><span>&raquo;</span></a></li>
+    {% endif %}
+  </ul>
+</div>
 	{% endif %}
+	
+	
 </div>
 	<!-- /container -->
 	{% endblock %} {% block finalscript %}
 	<script>
 		$(document).ready(function($) {
+			{% if needclear %}
+			$('#clientname').val = '';
+			$('#clienttype').val = '';
+			$('#clientinterface').val = '';
+			$('#telephone').val = '';
+			$('#phone').val = '';
+			$('#group').val = '';
+			{% endif %}
 				$.get('/data/client', '', function(data) {
 					$('#clientname').typeahead({
 						source: function(query, process) {

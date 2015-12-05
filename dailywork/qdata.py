@@ -21,16 +21,16 @@ def QueryDataForClientInterface():
     return JsonFrom(db.session.query(ClientInterface.name))  
 
 def QueryDataForPhone():
-    return JsonFrom(db.session.query(WorkFlow.phonenumber))
+    return JsonFrom(db.session.query(WorkFlow.phonenumber).distinct())
 
 def QueryDataForTelephone():
-    return JsonFrom(db.session.query(WorkFlow.telephone))
+    return JsonFrom(db.session.query(WorkFlow.telephone).distinct())
 
 SwitchOperator = {
                   'client':QueryDataForClient,
                   'group':QueryDataForGroup,
                   'type':QueryDataForClientType,
-                  'interface':QueryDataForClientType,
+                  'interface':QueryDataForClientInterface,
                   'phone':QueryDataForPhone,
                   'tel':QueryDataForTelephone
                   }

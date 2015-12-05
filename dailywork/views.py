@@ -55,16 +55,15 @@ def convertString(obj):
             print field  
     return retobj 
  
-@app.route('/user', methods=['GET', 'POST'])
-@app.route('/user/<int:page>', methods=['GET', 'POST'])
-def user(page = 0):
+def getPage(pageindex, itemprepage):
     pagequery = db.session.query(
+                         models.WorkFlow.timestamp,
                          models.Client.name,  
-                         models.ClientType.desc, 
-                         models.Group.name,  
+                         models.ClientType.desc,                           
                          models.ClientInterface.name,
                          models.WorkFlow.telephone, 
                          models.WorkFlow.phonenumber,
+                         models.Group.name,
                          models.WorkFlow.comment
                          ).filter(
                           models.Client.id == models.WorkFlow.client_id, 
@@ -72,8 +71,16 @@ def user(page = 0):
                           models.Group.id == models.WorkFlow.group_id,
                           models.ClientInterface.id == models.WorkFlow.interface_id
                           )
-    pagedata = pagequery.slice(page * 20, page * 20 + 20) 
-   
+                         
+    itemcount = pagequery.count()
+    pagedata = pagequery.slice(pageindex * itemprepage, (pageindex + 1) * itemprepage)
+    return {'total':itemcount, 'data':pagedata}
+
+@app.route('/user', methods=['GET', 'POST'])
+@app.route('/user/<int:page>', methods=['GET', 'POST'])
+def user(page = 0):
+    ITEMPREPAGE = 6
+    
     # print convertString(pagedata)
     form = PostForm() 
     # flash("data:clientname:" + str(form.clientname.data) +
@@ -84,27 +91,35 @@ def user(page = 0):
         # save first clienttype 
         # if form.clienttype.data:
             # get ctype from db
-        ctype = models.ClientType.query.filter(models.ClientType.desc == form.clienttype.data).first()
-        if None == ctype: 
-            
-            ctype = models.ClientType()
-            if form.clienttype.data:
-                ctype.desc = form.clienttype.data     
-            db.session.add(ctype) 
-            db.session.commit()
+        ctype = None
+        if form.clienttype.data:
+            ctype = models.ClientType.query.filter(models.ClientType.desc == form.clienttype.data).first()
+            if None == ctype:            
+                ctype = models.ClientType(desc = form.clienttype.data)     
+                db.session.add(ctype) 
+                db.session.commit()
+        else:
+            defaultctype = models.ClientType()
+            ctype = models.ClientType.query.filter(models.ClientType.desc == defaultctype.desc).first()
+            if None == ctype:
+                ctype = defaultctype
+                db.session.add(ctype)
+                db.session.commit()
 
                 
         # if form.clientinterface.data:
             # 
-        cinterface = models.ClientInterface.query.filter(
+        cinterface = None
+        if form.clientinterface.data:
+            cinterface = models.ClientInterface.query.filter(
                     models.ClientInterface.name == form.clientinterface.data
-                    ).first()
-        if None == cinterface :
-            cinterface = models.ClientInterface()
-            if form.clientinterface.data:
-                cinterface.name = form.clientinterface.data
-            db.session.add(cinterface)
-            db.session.commit()
+                    ).first()        
+            if None == cinterface :
+                cinterface = models.ClientInterface(name = form.clientinterface.data)
+                db.session.add(cinterface)
+                db.session.commit()
+                
+            
        
         # if form.group.data:
             #
@@ -143,12 +158,25 @@ def user(page = 0):
                                    )
         db.session.add(workflow)
         db.session.commit()
-        
-        return render_template('user.html',form=PostForm(), page = pagedata)
+        pageinfo = getPage(page, ITEMPREPAGE)
+        return render_template('user.html',
+                               form=form, 
+                               page = pageinfo['data'], 
+                               counter = pageinfo['total'], 
+                               current = page,
+                               pagecount = pageinfo['total']/ITEMPREPAGE,
+                               needclear = True)
     #else:
      #   flash("validate failed.")
         
-    return render_template('user.html', form = form, page = pagedata)
+    pageinfo = getPage(page, ITEMPREPAGE)
+    return render_template('user.html', 
+                           form = form, 
+                           page = pageinfo['data'], 
+                           counter = pageinfo['total'], 
+                           current=page,
+                           pagecount = pageinfo['total']/ITEMPREPAGE,
+                           needclear = True)
     
     # return ''
     
