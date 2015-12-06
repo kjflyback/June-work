@@ -3,12 +3,15 @@ from models import Client, ClientType, ClientInterface, Group, WorkFlow
 
 def JsonFrom(obj):
     ret = "["
+    hasObj = False
     for o in obj:
+        hasObj = True
         if len(o._fields) > 1:
             ret += '["' + '","'.join(o) + '"],'
         else:
-            ret += '"' + o[0] + '",'   
-    ret = ret[:-1]     
+            ret += '"' + o[0] + '",'  
+    if hasObj:
+        ret = ret[:-1]     
     ret += "]"
     return ret
 
