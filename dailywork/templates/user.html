@@ -2,63 +2,27 @@
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-
-			<a class="brand" href="#">JUNE'S TASK<span class="badge badge-info">{{counter}}</span></a>
-			<div class="nav-collapse collapse">
-
-				<ul class="nav">
-					<li class="active"><a href="#">主页</a></li>
-					<li><a href="#">查看数据</a></li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">管理<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<!-- links -->
-							<li><a href="#">客户名称</a></li>
-							<li><a href="#">种类</a></li>
-							<li><a href="#">联系人</a></li>
-							<li><a href="#">处理分类</a></li>
-						</ul>
-					</li>
-					<li>
-						
-					</li>
-				</ul>
-				
-			</div>
-			<!--/.nav-collapse -->
-		</div>
-	</div>
-</div>
-
-{% endblock %} {% block content %}
-
-<div class="containern">
-	<div class=" well-small">
-		<form class="form-inline" id="newline" target="_self" method="post">
-			
-			{{form.hidden_tag()}}
-			{% for error in form.errors.clientname %}
-			<span class="label label-important">
+			<form class="form-inline" id="newline" target="_self" method="post">
+				{{form.hidden_tag()}}
+				{% if form.error %}
+				{% for error in form.errors.clientname %}
+				<span class="label label-important">
 			{{error}}
-			</span>
-			{% endfor %}
-			
-			
-			<br> {{form.clientname(class="input-medium", placeholder="客户名称")}} 
-				{{form.clienttype(class="input-small", placeholder="种类")}} 
-				{{form.clientinterface(class="input-small", placeholder="联系人姓名")}} 
-				{{form.telephone(class="input-small", placeholder="电话")}} 
-				{{form.phone(class="input-medium",placeholder="手机")}} 
-				{{form.group(class="input-small", placeholder="处理分类")}}
-			<button type="submit" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i></button>
+			</span> {% endfor %}
+			{% endif %}
+				<br> 
+					{{form.clientname(id="clientname", class="input-medium", placeholder="客户名称")}} 
+					{{form.clienttype(id= "clienttype", class="input-small", placeholder="种类")}} 
+					{{form.clientinterface(id="clientinterface", class="input-small", placeholder="联系人姓名")}} 
+					{{form.telephone(id="telephone", class="input-small", placeholder="电话")}}
+					{{form.phone(id="phone", class="input-medium",placeholder="手机")}} 
+					{{form.group(id="group", class="input-small", placeholder="处理分类")}}
+				<button type="submit" class="btn btn-info btn-small">
+					<i class="icon-plus icon-white"></i>
+				</button>
 
-			<br> {{form.comment(rows="3", style="width:750px", placeholder="备注")}}
-			<!--
+				<br> {{form.comment(rows="3", style="width:750px", placeholder="备注")}}
+				<!--
 			<input id="clienttype" type="text" class="input-small" placeholder="种类">
 			<input id="interface" type="text" class="input-small" placeholder="联系人姓名" />
 			<input id="telephone" type="text" class="input-small" placeholder="电话" />
@@ -69,113 +33,212 @@
 				<textarea name="comment" class="input-xxlarge" rows="10" placeholder="备注"></textarea>
 			<br>
 				-->
-			</br>
-		</form>
-	</div>
-	{% if page %}
-	<div class="well well-small">
-	<table class="table table-condensed table-striped table-hover ">
-		<thead>
-			<td>日期时间</td><td>客户</td><td>种类</td><td>联系人</td><td>电话</td><td>手机</td><td>处理分类</td><td>备注</td>
-		</thead>
-		
-		{% for item in page.all() %}
-		<tr>
-			<td><code>{{item[0].strftime('%Y-%m-%d %H:%M')}}</code></td>
-			<td>{{item[1]}}</td>
-			<td>{{item[2]}}</td>
-			<td>{{item[3]}}</td>
-			<td>{{item[4]}}</td>
-			<td>{{item[5]}}</td>
-			<td>{{item[6]}}</td>
-			<td>{{item[7]}}</td>
+				</br>
+			</form>
+				<div class="pagination pagination-centered pagination-mini">
+			<ul>
+
+				<li {% if current ==0 %} 
+					class='disabled' 
+					{% endif %}
+				>
+				<a href="/user/{{current - 1}}">
+					<span>&laquo;</span>
+				</a>
+				</li>
+
+				{% for p in range(0, pagecount + 1) %}
+				<li {% if current==p %} 
+					class="active" 
+					{% endif %}
+				>
+				<a href="/user/{{p}}">
+					{{p + 1}}
+				</a>
+				</li>
+				{% endfor %}
+
+				<li {% if current == pagecount %} 
+					class='disabled' 
+					{% endif %}
+					>
+				<a href="/user/{{current + 1}}">
+					<span>&raquo;</span>
+				</a>
+				</li>
+
+			</ul>
+		</div>
 			
-		</tr>
-		{% endfor %}		
-	</table>
+			<!--/.nav-collapse -->
+		</div>
 	</div>
-	<div class="pagination pagination-centered pagination-mini">
-  <ul>
-  	{% if current != 0 %}
-  	<li><a href="/user/{{current - 1}}"><span>&laquo;</span></a></li>
-  	{% endif %}
-  	{% for p in range(0, pagecount + 1) %}    
-    <li><a href="/user/{{p}}">{{p + 1}}</a></li>
-   	{% endfor %}
-   	{% if current != pagecount %}
-    <li><a href="/user/{{current + 1}}"><span>&raquo;</span></a></li>
-    {% endif %}
-  </ul>
 </div>
+
+{% endblock %} 
+{% block content %}
+
+<div >
+
+	{% if page %}
+
+	<div class="d" style="padding-top: 150px;">
+		
+		<table class="table table-condensed table-striped table-hover" style="table-layout:fixed">
+			<thead>
+				<tr>
+				<td width="130px">日期时间</td>
+				<td width="130px">客户</td>
+				<td width="60px">种类</td>
+				<td width="50px">联系人</td>
+				<td width="90px">电话</td>
+				<td width="90px">手机</div></td>
+				<td width="60px">处理分类</td>
+				<td>备注</td>
+				</tr>
+			</thead>
+
+			{% for item in page.all() %}
+			<tr>
+				<td><code>{{item[0].strftime('%Y-%m-%d %H:%M')}}</code></td>
+				<td><div class="column" title="{{item[1]}}">{{item[1]}}</div></td>
+				<td><div class="column" title="{{item[2]}}">{{item[2]}}</div></td>
+				<td><div class="column" title="{{item[3]}}">{{item[3]}}</div></td>
+				<td><div class="column" title="{{item[4]}}">{{item[4]}}</div></td>
+				<td><div class="column" title="{{item[5]}}">{{item[5]}}</div></td>
+				<td><div class="column" title="{{item[6]}}">{{item[6]}}</div></td>
+				<td><div class="column" title="{{item[7]}}">{{item[7]}}</div></td>
+
+			</tr>
+			{% endfor %}
+		</table>
 	{% endif %}
-	
-	
+	</div>
 </div>
-	<!-- /container -->
-	{% endblock %} {% block finalscript %}
-	<script>
-		$(document).ready(function($) {
-			{% if needclear %}
+<!-- /container -->
+{% endblock %} 
+{% block finalscript %}
+<script src="{{ url_for('static',filename='region.js') }}"></script>
+<script>
+function unique(arr) {
+    var result = [], hash = {};
+    for (var i = 0, elem; (elem = arr[i]) != null; i++) {
+        if (!hash[elem]) {
+            result.push(elem);
+            hash[elem] = true;
+        }
+    }
+    return result;
+//http://www.cnblogs.com/sosoft/
+}
+	$(document).ready(function($) {
+			{%	if needclear %}
 			$('#clientname').val = '';
 			$('#clienttype').val = '';
 			$('#clientinterface').val = '';
 			$('#telephone').val = '';
 			$('#phone').val = '';
-			$('#group').val = '';
+			$('#group').val = ''; 
 			{% endif %}
-				$.get('/data/client', '', function(data) {
-					$('#clientname').typeahead({
+			
+			var regions = []
+			var pos = [];
+			var eachsub = function(item){
+					var prefix = pos.join('')
+					// console.log(prefix + item.name);
+					if(item.name == '请选择') return;
+					if(item.name == '其他') return;
+					regions.push(prefix + item.name);
+					pos.push(item.name);
+					if(item.sub)
+					     item.sub.forEach(eachsub);
+					pos.pop();
+					}
+			city_regions.forEach(eachsub);
+			var commentPart = {};
+			var typeaheads =
+			[
+			['client', 'clientname',{source:function(data){
+				var retdata = [];
+				// commentPart = {};
+				data.forEach(function(item){
+					retdata.push(item[0])
+					if(!commentPart[item[0]])
+						commentPart[item[0]] = [];
+					
+					if(item[1].length)
+					{
+						var ci = commentPart[item[0]];
+						if (ci.length < 5)
+						{
+							ci.push(item[1]);
+							ci = unique(ci);
+							commentPart[item[0]] = ci;
+						}
+					}
+					
+				});
+				
+				
+				return unique(retdata).concat(regions)
+			},highlighter:function(item, val){
+				var retHtml = '<blockquote><dl class="dl-horizontal"><dt>' + val + '</dt>'
+  
+				var head = val;
+				var comment = commentPart[item];
+				// console.log(comment);
+				if (!comment) return val;
+				// comment = unique(comment);
+				console.log(commentPart);
+				comment.forEach(function(it){
+					retHtml +=  '<dd><small>' + it + '</small></dd>';
+					// head = "";
+				});
+				retHtml += "</dl></blockquote>";
+				console.log(retHtml);
+				return retHtml;
+			}
+			}],
+			['type', 'clienttype'],
+			['interface', 'clientinterface'],
+			['tel', 'telephone'],
+			['phone', 'phone'],
+			['group', 'group']
+			];
+			
+			
+			typeaheads.forEach(function(tah){
+				$.get('/data/' + tah[0], '', function(data){
+					// console.log(data);
+					$('#' + tah[1]).typeahead({
 						source: function(query, process) {
+							if(tah[2] && tah[2].source)
+								return tah[2].source(JSON.parse(data))
 							return JSON.parse(data)
 						},
 						matcher: function(item) {
-							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
-						}
-					});
-				});
-				$.get('/data/type', '', function(data) {
-					$('#clienttype').typeahead({
-						source: function(query, process) {
-							return JSON.parse(data)
+							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase())) ||
+							~(item.toUpperCase().indexOf(this.query.toUpperCase())
+							);
+					}, 
+						highlighter: function (item) {
+						    var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+						    var val = item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+						        return '<strong>' + match + '</strong>'
+						    });
+						    if(tah[2] && tah[2].highlighter)
+						    		return tah[2].highlighter(item, val);
+						    	return val;
 						},
-						matcher: function(item) {
-							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
+						updater: function (item) {
+						    return item
 						}
 					});
 				});
-				$.get('/data/interface', '', function(data) {
-					$('#clientinterface').typeahead({
-						source: function(query, process) {
-							return JSON.parse(data)
-						},
-						matcher: function(item) {
-							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
-						}
-					});
-				});
-				$.get('/data/tel', '', function(data) {
-					$('#telephone').typeahead({
-						source: function(query, process) {
-							return JSON.parse(data)
-						},
-						matcher: function(item) {
-							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
-						}
-					});
-				});
-				$.get('/data/phone', '', function(data) {
-					$('#phone').typeahead({
-						source: function(query, process) {
-							return JSON.parse(data)
-						},
-						matcher: function(item) {
-							return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase()));
-						}
-					});
-				});
-			}) 
-			// $('#clientname').attr('data-original-title', '{{error}}')
-			// $('#clientname').attr('data-toggle', 'tooltip')
-			// $('#clientname').tooltip('show')
-	</script>
-	{% endblock %}
+			});
+	});
+		// $('#clientname').attr('data-original-title', '{{error}}')
+		// $('#clientname').attr('data-toggle', 'tooltip')
+		// $('#clientname').tooltip('show')
+</script>
+{% endblock %}

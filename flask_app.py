@@ -1,3 +1,4 @@
 
 from dailywork import app
-app.run(port= 8000, debug=True)   
+app.debug = True
+app.run('', 8000)  

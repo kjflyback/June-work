@@ -2,14 +2,24 @@ from . import db
 from models import Client, ClientType, ClientInterface, Group, WorkFlow
 
 def JsonFrom(obj):
-    ret = []
+    ret = "["
     for o in obj:
-        ret.append(o[0])
-        
-    return '["'+ '","'.join(ret) + '"]'
+        if len(o._fields) > 1:
+            ret += '["' + '","'.join(o) + '"],'
+        else:
+            ret += '"' + o[0] + '",'   
+    ret = ret[:-1]     
+    ret += "]"
+    return ret
 
 def QueryDataForClient():
-    return JsonFrom(db.session.query(Client.name))
+    return JsonFrom(db.session.query(
+                                     Client.name, 
+                                     WorkFlow.comment
+                                     ).order_by(WorkFlow.timestamp.desc()).filter(
+                                              Client.id == WorkFlow.client_id
+                                    ).distinct())
+    # return JsonFrom(db.session.query(Client.name))
     
 def QueryDataForGroup(): 
     return JsonFrom(db.session.query(Group.name))

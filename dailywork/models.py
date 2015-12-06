@@ -31,12 +31,23 @@ class ClientType(db.Model):
     
     def __repr__(self):
         return '<ClientType %r>' % (self.desc)
-    def Default(self):
+    
+    @staticmethod
+    def Default(data):
         default = ClientType.query.filter(ClientType.desc == 'general').first()
         if None == default:
             default = ClientType()
             db.session.add(default)
             db.session.commit()
+        if None == data:
+            return default
+        q = ClientType.query.filter(ClientType.desc == data).first()
+        if None == q:
+            q = ClientType(desc = data)
+            db.session.add(q)
+            db.session.commit()
+        return q
+        
         
 
 class ClientInterface(db.Model):
@@ -50,12 +61,21 @@ class ClientInterface(db.Model):
     
     def __repr__(self):
         return '<ClientInterface %r>' % (self.name)
-    def Default(self):
-        default = ClientInterface.query.filter(ClientInterface.name == 'NO').first()
+    @staticmethod
+    def Default(data):
+        default = ClientInterface.query.filter(ClientInterface.name == 'No').first()
         if None == default:
             default = ClientInterface()
             db.session.add(default)
             db.session.commit()
+        if None == data:
+            return default
+        q = ClientInterface.query.filter(ClientInterface.name == data).first()
+        if None == q:
+            q = ClientInterface(name = data)
+            db.session.add(q)
+            db.session.commit()
+        return q
 
 class Group(db.Model):
     __tablename__ = "group"
@@ -65,12 +85,21 @@ class Group(db.Model):
     
     def __repr__(self):
         return '<Group %r>' % (self.name)
-    def Default(self):
+    @staticmethod
+    def Default(data):
         default = Group.query.filter(Group.name == 'no group').first()
         if None == default:
             default = Group()
             db.session.add(default)
             db.session.commit()
+        if None == data:
+            return default
+        q = Group.query.filter(Group.name == data).first()
+        if None == q:
+            q = Group(name = data)
+            db.session.add(q)
+            db.session.commit()
+        return q
     
 class Client(db.Model):   
     __tablename__ = "client" 

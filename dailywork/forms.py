@@ -18,4 +18,12 @@ class PostForm(Form):
     group=TextField('group')
     comment = TextAreaField('comment')
     
+class ClearForm():
+    clientname = ''
+    clienttype = ''
+    clientinterface=''
+    telephone = ''
+    phone= ''
+    group=''
+    comment = ''
     

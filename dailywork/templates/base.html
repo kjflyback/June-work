@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% if title %}
-    <title>{{title}}</title>
-    {% else %}
-    <title>Undocumented title</title>
-    {% endif %}
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    
-    <link href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-    	<link href="{{ url_for('static',filename='bootstrap/css/bootstrap-responsive.css')}}" rel="stylesheet">
-    	<style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
-  </head>
-  <body>
-  	{% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <hr>
-    <ul>
-    {% for message in messages %}
-        <li>{{ message }} </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% block navbar %}{%endblock%}
-    {% block content %}{% endblock %}
-    
-    <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='py.js') }}"></script>
-     <script src="{{ url_for('static',filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
-     <script src="{{ url_for('static',filename='bootstrap/js/bootstrap-tooltip.js') }}"></script>
-     {% block finalscript %}{% endblock %}
-  </body>
+
+	<head>
+		{% if title %}
+		<title>{{title}}</title>
+		{% else %}
+		<title>Undocumented title</title>
+		{% endif %}
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+
+		<link href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+		<link href="{{ url_for('static',filename='bootstrap/css/bootstrap-responsive.css')}}" rel="stylesheet">
+		<style type="text/css">
+			.column {
+	     		overflow: hidden;      /*截取超出字符*/
+	     		text-overflow: ellipsis;     /*超出字符以…代替*/
+	     		white-space: nowrap;     /*确定超出宽度字符不换行*/
+	    		}
+	    		table {
+	    			table-layout: fixed;
+	    		}
+		</style>
+		<style>
+			body {
+			        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+			      }
+		</style>
+	</head>
+
+	<body>
+		{% with messages = get_flashed_messages() %} {% if messages %}
+		<hr>
+		<ul>
+			{% for message in messages %}
+			<li>{{ message }} </li>
+			{% endfor %}
+		</ul>
+		{% endif %} {% endwith %} {% block navbar %}{%endblock%} {% block content %}{% endblock %}
+
+		<script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='py.js') }}"></script>
+		<script src="{{ url_for('static',filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+		<script src="{{ url_for('static',filename='bootstrap/js/bootstrap-tooltip.js') }}"></script>
+		{% block finalscript %}{% endblock %}
+	</body>
+
 </html>

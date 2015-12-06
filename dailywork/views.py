@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect
 from . import app, db, models
-from forms import LoginForm, PostForm
+from forms import LoginForm, PostForm, ClearForm
 # from models import Client, ClientType, ClientInterface, Group
 from qdata import QueryData
 
@@ -43,7 +43,7 @@ def index():
 @app.route('/data')
 @app.route('/data/<command>', methods=['GET', 'POST'])
 def data_b(command):
-    print command
+    # print command
     return QueryData(command)
 
 
@@ -76,64 +76,30 @@ def getPage(pageindex, itemprepage):
     pagedata = pagequery.slice(pageindex * itemprepage, (pageindex + 1) * itemprepage)
     return {'total':itemcount, 'data':pagedata}
 
+
+
 @app.route('/user', methods=['GET', 'POST'])
 @app.route('/user/<int:page>', methods=['GET', 'POST'])
 def user(page = 0):
-    ITEMPREPAGE = 6
-    
+    ITEMPREPAGE = 6    
     # print convertString(pagedata)
     form = PostForm() 
-    # flash("data:clientname:" + str(form.clientname.data) +
-      #    "\nclienttype:" +str(form.clienttype.data) +
-       #   "\n") 
-    if form.validate_on_submit():  
-        # flash("validate ok.")
-        # save first clienttype 
-        # if form.clienttype.data:
-            # get ctype from db
-        ctype = None
-        if form.clienttype.data:
-            ctype = models.ClientType.query.filter(models.ClientType.desc == form.clienttype.data).first()
-            if None == ctype:            
-                ctype = models.ClientType(desc = form.clienttype.data)     
-                db.session.add(ctype) 
-                db.session.commit()
-        else:
-            defaultctype = models.ClientType()
-            ctype = models.ClientType.query.filter(models.ClientType.desc == defaultctype.desc).first()
-            if None == ctype:
-                ctype = defaultctype
-                db.session.add(ctype)
-                db.session.commit()
-
-                
-        # if form.clientinterface.data:
-            # 
-        cinterface = None
-        if form.clientinterface.data:
-            cinterface = models.ClientInterface.query.filter(
-                    models.ClientInterface.name == form.clientinterface.data
-                    ).first()        
-            if None == cinterface :
-                cinterface = models.ClientInterface(name = form.clientinterface.data)
-                db.session.add(cinterface)
-                db.session.commit()
-                
-            
-       
+    print 'before validate'
+    if form.validate_on_submit():
+        print 'pass validate.'
+        print form
+        print form.clienttype.data
+        print form.clientinterface.data
+        print form.clientname.data
+        print form.telephone.data
+        print form.phone.data
+        print form.group.data
+        ctype = models.ClientType.Default(form.clienttype.data)
+        # 
+        cinterface = models.ClientInterface.Default(form.clientinterface.data)
         # if form.group.data:
-            #
-        group = models.Group.query.filter(
-                models.Group.name == form.group.data
-                                          ).first()     
-            
-        if None == group:
-            group = models.Group()
-            if form.group.data:
-                group.name=form.group.data
-            db.session.add(group)
-            db.session.commit()
-                
+        #
+        group = models.Group.Default(form.group.data)
         client = models.Client.query.filter(models.Client.name == form.clientname.data).first()
             
         if None == client:
@@ -144,6 +110,11 @@ def user(page = 0):
        
             db.session.add(client)
             db.session.commit()
+        db.session.flush()
+        print ctype.id
+        print cinterface.id
+        print group.id
+        print client.id
         
          
         # save workflow
@@ -162,10 +133,10 @@ def user(page = 0):
         return render_template('user.html',
                                form=form, 
                                page = pageinfo['data'], 
-                               counter = pageinfo['total'], 
+                               counter = pageinfo['total'],
                                current = page,
                                pagecount = pageinfo['total']/ITEMPREPAGE,
-                               needclear = True)
+                               needclear = True) 
     #else:
      #   flash("validate failed.")
         
