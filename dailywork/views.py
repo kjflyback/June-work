@@ -70,6 +70,7 @@ def user(page = 0):
     form = PostForm() 
     print 'before validate'
     if form.validate_on_submit():
+        '''
         print 'pass validate.'
         print form
         print form.clienttype.data
@@ -78,6 +79,7 @@ def user(page = 0):
         print form.telephone.data
         print form.phone.data
         print form.group.data
+        '''
         ctype = models.ClientType.Default(form.clienttype.data)
         # 
         cinterface = models.ClientInterface.Default(form.clientinterface.data)
@@ -95,11 +97,12 @@ def user(page = 0):
             db.session.add(client)
             db.session.commit()
         db.session.flush()
+        '''
         print ctype.id
         print cinterface.id
         print group.id
         print client.id
-        
+        '''
          
         # save workflow
         workflow = models.WorkFlow(
