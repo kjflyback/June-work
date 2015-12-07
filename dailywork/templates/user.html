@@ -132,14 +132,7 @@ function unique(arr) {
 //http://www.cnblogs.com/sosoft/
 }
 	$(document).ready(function($) {
-			{%	if needclear %}
-			$('#clientname').val = '';
-			$('#clienttype').val = '';
-			$('#clientinterface').val = '';
-			$('#telephone').val = '';
-			$('#phone').val = '';
-			$('#group').val = ''; 
-			{% endif %}
+			
 			
 			var regions = []
 			var pos = [];
@@ -236,6 +229,15 @@ function unique(arr) {
 					});
 				});
 			});
+			
+			{%	if needclear %}
+			$('#clientname').val('');
+			$('#clienttype').val('');
+			$('#clientinterface').val('');
+			$('#telephone').val('');
+			$('#phone').val('');
+			$('#group').val(''); 
+			{% endif %}
 	});
 		// $('#clientname').attr('data-original-title', '{{error}}')
 		// $('#clientname').attr('data-toggle', 'tooltip')

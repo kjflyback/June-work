@@ -134,7 +134,7 @@ def user(page = 0):
                            counter = pageinfo['total'], 
                            current=page,
                            pagecount = pageinfo['total']/ITEMPREPAGE,
-                           needclear = True)
+                           needclear = False)
     
     # return ''
     
