@@ -65,7 +65,7 @@ def getPage(pageindex, itemprepage):
 @app.route('/user', methods=['GET', 'POST'])
 @app.route('/user/<int:page>', methods=['GET', 'POST'])
 def user(page = 0):
-    ITEMPREPAGE = 6    
+    ITEMPREPAGE = 30    
     # print convertString(pagedata)
     form = PostForm() 
     print 'before validate'
