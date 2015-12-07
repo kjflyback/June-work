@@ -104,6 +104,9 @@ def user(page = 0):
         print client.id
         '''
          
+        comment = form.comment.data
+        comment = comment.replace('\r', '')
+        comment = comment.replace('\n', '')
         # save workflow
         workflow = models.WorkFlow(
                 client_id = client.id,
