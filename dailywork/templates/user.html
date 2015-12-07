@@ -237,7 +237,11 @@ function unique(arr) {
 			$('#telephone').val('');
 			$('#phone').val('');
 			$('#group').val(''); 
+			
 			{% endif %}
+			
+			$('#clientname').focus();
+			$('#clientname').select();
 	});
 		// $('#clientname').attr('data-original-title', '{{error}}')
 		// $('#clientname').attr('data-toggle', 'tooltip')
