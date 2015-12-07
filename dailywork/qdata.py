@@ -1,19 +1,17 @@
 from . import db
 from models import Client, ClientType, ClientInterface, Group, WorkFlow
+import json
 
 def JsonFrom(obj):
-    ret = "["
-    hasObj = False
+    ret = []
     for o in obj:
         hasObj = True
         if len(o._fields) > 1:
-            ret += '["' + '","'.join(o) + '"],'
+            ret += [o]
         else:
-            ret += '"' + o[0] + '",'  
-    if hasObj:
-        ret = ret[:-1]     
-    ret += "]"
-    return ret
+            ret += o[0] 
+        
+    return json.dumps(ret)
 
 def QueryDataForClient():
     return JsonFrom(db.session.query(
