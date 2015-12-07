@@ -1,4 +1,4 @@
 
-from dailywork import app
-app.debug = True
-app.run('', 8000)  
+from dailywork import app as application
+application.debug = True
+application.run('', 8000)  
