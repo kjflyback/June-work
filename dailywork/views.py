@@ -3,6 +3,7 @@ from . import app, db, models
 from forms import LoginForm, PostForm, ClearForm
 # from models import Client, ClientType, ClientInterface, Group
 from qdata import QueryData
+import os
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -19,26 +20,9 @@ def login():
 @app.route('/')
 @app.route('/index')
 def index():
-    # print "begin index"
-    user = {'nickname': 'June'}
-    posts = [
-             {
-              'author': {'nickname':'John'},
-              'body' : 'Beatiful day in Portland!'
-              },
-             {
-              'author': {'nickname':'Susan'},
-              'body': 'The Avengers movie was so cool!'
-              }
-             ]
-    # print posts
-    ret = render_template('index.html',
-                           title='Home',
-                           user=user,
-                           posts=posts
-                           )
-    # print ret
-    return ret 
+    basedir = os.path.abspath('')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, "app.db")
+    return SQLALCHEMY_DATABASE_URI
 
 @app.route('/data')
 @app.route('/data/<command>', methods=['GET', 'POST'])
