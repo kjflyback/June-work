@@ -1,15 +1,22 @@
 {% extends "base.html" %} {% block navbar %}
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top ">
+	
 	<div class="navbar-inner">
 		<div class="container">
+			<a class="brand" href="#">WORKPLACE</a>
+			<ul class="nav">
+			  <li class="active"><a href="#">信息输入</a></li>
+			  <li><a href="query">Link</a></li>
+			</ul>
+			<br><br>
 			<form class="form-inline" id="newline" target="_self" method="post">
 				{{form.hidden_tag()}}
 				{% if form.error %}
 				{% for error in form.errors.clientname %}
 				<span class="label label-important">
-			{{error}}
-			</span> {% endfor %}
-			{% endif %}
+				{{error}}
+				</span> {% endfor %}
+				{% endif %}
 				<br> 
 					{{form.clientname(id="clientname", class="input-medium", placeholder="客户名称")}} 
 					{{form.clienttype(id= "clienttype", class="input-small", placeholder="种类")}} 
@@ -35,40 +42,7 @@
 				-->
 				</br>
 			</form>
-				<div class="pagination pagination-centered pagination-mini">
-			<ul>
-
-				<li {% if current ==0 %} 
-					class='disabled' 
-					{% endif %}
-				>
-				<a href="/user/{{current - 1}}">
-					<span>&laquo;</span>
-				</a>
-				</li>
-
-				{% for p in range(0, pagecount + 1) %}
-				<li {% if current==p %} 
-					class="active" 
-					{% endif %}
-				>
-				<a href="/user/{{p}}">
-					{{p + 1}}
-				</a>
-				</li>
-				{% endfor %}
-
-				<li {% if current == pagecount %} 
-					class='disabled' 
-					{% endif %}
-					>
-				<a href="/user/{{current + 1}}">
-					<span>&raquo;</span>
-				</a>
-				</li>
-
-			</ul>
-		</div>
+				
 			
 			<!--/.nav-collapse -->
 		</div>
@@ -77,13 +51,11 @@
 
 {% endblock %} 
 {% block content %}
-
-<div >
-
 	{% if page %}
 
-	<div class="d" style="padding-top: 150px;">
-		
+	<div class="d" style="padding-top: 120px;padding-bottom: 50px;">
+		<div >
+			
 		<table class="table table-condensed table-striped table-hover" style="table-layout:fixed">
 			<thead>
 				<tr>
@@ -113,6 +85,47 @@
 			{% endfor %}
 		</table>
 	{% endif %}
+	</div>
+</div>
+
+<div class="navbar navbar-fixed-bottom nav-inverse">	
+	<div class="navbar-inner">
+		<div class="container">
+			<div class="pagination pagination-right">
+				
+			<ul>
+				<li><span>合计{{counter}}</span></li>
+				<li {% if current ==0 %} 
+					class='disabled' 
+					{% endif %}
+				>
+				<a href="/user/{{current - 1}}">
+					<span>&laquo;</span>
+				</a>
+				</li>
+
+				{% for p in range(0, pagecount + 1) %}
+				<li {% if current==p %} 
+					class="active" 
+					{% endif %}
+				>
+				<a href="/user/{{p}}">
+					{{p + 1}}
+				</a>
+				</li>
+				{% endfor %}
+
+				<li {% if current == pagecount %} 
+					class='disabled' 
+					{% endif %}
+					>
+				<a href="/user/{{current + 1}}">
+					<span>&raquo;</span>
+				</a>
+				</li>
+			</ul>
+	
+		</div>
 	</div>
 </div>
 <!-- /container -->
