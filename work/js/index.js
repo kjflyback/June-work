@@ -11,12 +11,45 @@ function unique(arr) {
 	return result;
 	//http://www.cnblogs.com/sosoft/
 }
-$(document).ready(function($) {
+$(document).ready(function ($) {
+
+	$('#insert').click(function () {
+		record.insert(
+			$('#clientname').val(),
+			$('#clienttype').val(),
+			$('#interface').val(),
+			$('#telephone').val(),
+			$('#phone').val(),
+			$('#group').val(),
+			$('#comment').val(),
+			function (ret) {
+				$('#myModal').modal();
+			}
+		)
+	});
+	
+	console.log(dataitem);
+		
+	record.getRecord(function(result){
+		var dataitem = $('#dataitem').text();
+		for(var i = 0;i<result.length;i++){
+			var di = dataitem;
+			// console.log(result[i]);
+			for(var k in result[i].attributes){
+				var r = new RegExp('{' + k + '}', 'ig');
+				di = di.replace(r, result[i].attributes[k]);
+			}
+			console.log(result[i]);
+			di = di.replace(/{time}/g, result[i].createdAt.toLocaleString());
+			$('#hisdata').append(di);
+		}
+	});
+	
 	var regions = []
 	var pos = [];
-	var eachsub = function(item) {
+	var eachsub = function (item) {
 		var prefix = pos.join('')
-			// console.log(prefix + item.name);
+		// console.log(prefix + item.name);
 		if (item.name == '请选择') return;
 		if (item.name == '其他') return;
 		regions.push(prefix + item.name);
@@ -30,11 +63,11 @@ $(document).ready(function($) {
 	var typeaheads =
 		[
 			['client.json', 'clientname', {
-				source: function(data) {
+				source: function (data) {
 					var retdata = [];
 					// commentPart = {};
 					//console.log(data);
-					data.forEach(function(item) {
+					data.forEach(function (item) {
 						// console.log(data);
 						retdata.push(item[0])
 						if (!commentPart[item[0]])
@@ -55,7 +88,7 @@ $(document).ready(function($) {
 					var retdata = unique(retdata).concat(regions);
 					return retdata;
 				},
-				highlighter: function(item, val) {
+				highlighter: function (item, val) {
 					var retHtml = '<blockquote><dl class="dl-horizontal"><dt>' + val + '</dt>'
 
 					var head = val;
@@ -64,7 +97,7 @@ $(document).ready(function($) {
 					if (!comment) return val;
 					// comment = unique(comment);
 					// console.log(commentPart);
-					comment.forEach(function(it) {
+					comment.forEach(function (it) {
 						retHtml += '<dd><small>' + it + '</small></dd>';
 						// head = "";
 					});
@@ -81,31 +114,31 @@ $(document).ready(function($) {
 		];
 
 
-	typeaheads.forEach(function(tah) {
-		$.get('data/' + tah[0], '', function(data) {
+	typeaheads.forEach(function (tah) {
+		$.get('data/' + tah[0], '', function (data) {
 			// console.log(data);
 			// data = data.replace('\n', '');
 			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
-				source: function(query, process) {
+				source: function (query, process) {
 					if (tah[2] && tah[2].source)
 						return tah[2].source(data)
 					return data;
 				},
-				matcher: function(item) {
+				matcher: function (item) {
 					return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase())) ||
 						~(item.toUpperCase().indexOf(this.query.toUpperCase()));
 				},
-				highlighter: function(item) {
+				highlighter: function (item) {
 					var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-					var val = item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
+					var val = item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
 						return '<strong>' + match + '</strong>'
 					});
 					if (tah[2] && tah[2].highlighter)
 						return tah[2].highlighter(item, val);
 					return val;
 				},
-				updater: function(item) {
+				updater: function (item) {
 					return item
 				}
 			});

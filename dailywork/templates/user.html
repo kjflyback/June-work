@@ -168,6 +168,7 @@ function unique(arr) {
 			['client', 'clientname',{source:function(data){
 				var retdata = [];
 				// commentPart = {};
+				console.log(data);
 				data.forEach(function(item){
 					retdata.push(item[0])
 					if(!commentPart[item[0]])
@@ -216,7 +217,8 @@ function unique(arr) {
 			
 			typeaheads.forEach(function(tah){
 				$.get('/data/' + tah[0], '', function(data){
-					// console.log(data);
+					console.log(tah[0]);
+					 console.log(data);
 					data = data.replace('\n', '');
 					data = data.replace('\r', '');
 					$('#' + tah[1]).typeahead({
