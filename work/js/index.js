@@ -84,13 +84,13 @@ $(document).ready(function($) {
 	typeaheads.forEach(function(tah) {
 		$.get('data/' + tah[0], '', function(data) {
 			// console.log(data);
-			data = data.replace('\n', '');
-			data = data.replace('\r', '');
+			// data = data.replace('\n', '');
+			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
 				source: function(query, process) {
 					if (tah[2] && tah[2].source)
-						return tah[2].source(JSON.parse(data))
-					return JSON.parse(data)
+						return tah[2].source(data)
+					return data;
 				},
 				matcher: function(item) {
 					return ~(pinyin.getCamelChars(item).indexOf(this.query.toUpperCase())) ||
