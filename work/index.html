@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>June-work</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+
+		<link href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="js/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+		<style type="text/css">
+			.column {
+	     		overflow: hidden;      /*截取超出字符*/
+	     		text-overflow: ellipsis;     /*超出字符以…代替*/
+	     		white-space: nowrap;     /*确定超出宽度字符不换行*/
+	    		}
+	    		table {
+	    			table-layout: fixed;
+	    		}
+		</style>
+		<style>
+			body {
+			        padding-top: 80px; /* 60px to make the container go all the way to the bottom of the topbar */
+			      }
+		</style>
+	</head>
+
+	<body>
+		<!-- {% endif %} {% endwith %} {% block navbar %}{%endblock%} {% block content %}{% endblock %} -->
+        <div class="navbar navbar-fixed-top ">
+	
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#">WORKPLACE</a>
+			<ul class="nav">
+			  <li class="active"><a href="#">信息输入</a></li>
+			  <li><a href="query">历史</a></li>
+			</ul>
+			<br><br>
+			<div class="form-inline" id="newline">
+			<div>
+    			<input id="clientname" type="text" class="input-medium" placeholder="客户名称" />
+    			<input id="clienttype" type="text" class="input-small" placeholder="种类" />
+    			<input id="interface" type="text" class="input-small" placeholder="联系人姓名" />
+    			<input id="telephone" type="text" class="input-small" placeholder="电话" />
+    			<input id="phone" type="text" class="input-small" placeholder="手机" />
+    			<input id="conenttype" type="text" class="input-small" placeholder="处理分类" /> <!-- 保修/维护/巡检 -->
+    			    <button type="submit" class="btn btn-info">
+    					<i class="icon-plus icon-white"></i>
+    				</button>
+    			<br>
+				
+			</div>
+			<textarea name="comment"  style="width:750px" rows="3" placeholder="备注"></textarea>
+			</div>	
+			
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+<div class="d" style="padding-top: 120px;padding-bottom: 50px;">
+		<div >
+		<table class="table table-condensed table-striped table-hover" style="table-layout:fixed">
+			<thead>
+				<tr>
+				<td width="130px">日期时间</td>
+				<td width="130px">客户</td>
+				<td width="60px">种类</td>
+				<td width="50px">联系人</td>
+				<td width="90px">电话</td>
+				<td width="90px">手机</div></td>
+				<td width="60px">处理分类</td>
+				<td>备注</td>
+				</tr>
+			</thead>
+		</table>
+<!-- 	{% endif %} -->
+	</div>
+</div>
+<script type="text/template" id="dataitem">
+<tr>
+	<td><code>{time}</code></td>
+	<td><div class="column" title="{client}">{client}</div></td>
+	<td><div class="column" title="{type}">{type}</div></td>
+	<td><div class="column" title="{contact}">{contact}</div></td>
+	<td><div class="column" title="{tel}">{tel}</div></td>
+	<td><div class="column" title="{phone}">{phone}</div></td>
+	<td><div class="column" title="{process}">{process}</div></td>
+	<td><div class="column" title="{memo}">{memo}</div></td>
+</tr>
+</script>
+<div class="navbar navbar-fixed-bottom nav-inverse">	
+	<div class="navbar-inner">
+		<div class="container">
+			
+			<div class="pagination pagination-right">
+				
+			<ul>
+				<li><span>合计{{counter}}</span></li>
+				<li 
+					class='disabled' 
+					
+				>
+				<a href="/user/{{current - 1}}">
+					<span>&laquo;</span>
+				</a>
+				</li>
+
+				<!-- {% for p in range(0, pagecount + 1) %} -->
+				<li 
+					class="active" 
+					
+				>
+				<a href="/user/{{p}}">
+					{{p + 1}}
+				</a>
+				</li>
+				<!-- {% endfor %} -->
+
+				<li 
+					class='disabled' 
+					 
+					>
+				<a href="/user/{{current + 1}}">
+					<span>&raquo;</span>
+				</a>
+				</li>
+			</ul>
+	
+		</div>
+	</div>
+</div>
+		<script src="js/jquery/jquery.min.js"></script>
+		<script src="js/bootstrap/js/bootstrap.min.js"></script>
+		<script src="js/py.js"></script>
+		<script src="js/bootstrap/js/bootstrap-typeahead.js"></script>
+		<script src="js/bootstrap/js/bootstrap-tooltip.js"></script>
+		<script src="js/region.js"></script>
+		<script src="js/index.js"></script>
+	</body>
+
+</html>
