@@ -152,7 +152,7 @@ $(document).ready(function ($) {
 		});
 	});
 
-	/*
+	
 	$('#clientname').val('');
 	$('#clienttype').val('');
 	$('#clientinterface').val('');
@@ -161,7 +161,7 @@ $(document).ready(function ($) {
 	$('#group').val('');
 	$('#clientname').focus();
 	$('#clientname').select();
-	*/
+	
 	// $('#his').append('<li><a href="#" date="' + new Date().toLocaleDateString() + '">' + new Date().toLocaleDateString() + '</a></li>');
 	server.lastdate(function (date) {
 		console.log('lastdate');
