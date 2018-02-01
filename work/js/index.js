@@ -69,13 +69,16 @@ $(document).ready(function ($) {
 	var commentPart = {};
 	var typeaheads =
 		[
+			
 			['client.json', 'clientname', {
 				source: function (data) {
 					var retdata = [];
 					// commentPart = {};
-					//console.log(data);
-					data.forEach(function (item) {
-						// console.log(data);
+					// console.log(data);
+					data.forEach(function (itemx) {
+						// console.log(itemx);
+						
+						var item = [itemx, itemx];
 						retdata.push(item[0])
 						if (!commentPart[item[0]])
 							commentPart[item[0]] = [];
@@ -90,14 +93,11 @@ $(document).ready(function ($) {
 						}
 
 					});
-
-
 					var retdata = unique(retdata).concat(regions);
 					return retdata;
 				},
 				highlighter: function (item, val) {
-					var retHtml = '<blockquote><dl class="dl-horizontal"><dt>' + val + '</dt>'
-
+					var retHtml = '<dl class="dl-horizontal"><dt>' + val + '</dt>'
 					var head = val;
 					var comment = commentPart[item];
 					// console.log(comment);
@@ -105,29 +105,32 @@ $(document).ready(function ($) {
 					// comment = unique(comment);
 					// console.log(commentPart);
 					comment.forEach(function (it) {
-						retHtml += '<dd><small>' + it + '</small></dd>';
+						retHtml += '<dd><small>' + it + '</small></d>';
 						// head = "";
 					});
-					retHtml += "</dl></blockquote>";
-					console.log(retHtml);
+					retHtml += "</dl>";
+					// console.log(retHtml);
 					return retHtml;
 				}
 			}],
+			// ['client.json', 'clientname'],
+			
 			['type.json', 'clienttype'],
-			['interface.json', 'clientinterface'],
+			['interface.json', 'interface'],
 			['tel.json', 'telephone'],
 			['phone.json', 'phone'],
 			['group.json', 'group']
+			
 		];
-
-
-	typeaheads.forEach(function (tah) {
-		$.get('data/' + tah[0], '', function (data) {
-			// console.log(data);
+		
+	typeaheads.forEach(function(tah) {
+		// console.log(tah);
+		$.post('data/' + tah[0], '', function(data){
 			// data = data.replace('\n', '');
 			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
 				source: function (query, process) {
+					// console.log(query);
 					if (tah[2] && tah[2].source)
 						return tah[2].source(data)
 					return data;
@@ -155,7 +158,7 @@ $(document).ready(function ($) {
 	
 	$('#clientname').val('');
 	$('#clienttype').val('');
-	$('#clientinterface').val('');
+	$('#interface').val('');
 	$('#telephone').val('');
 	$('#phone').val('');
 	$('#group').val('');
@@ -177,7 +180,7 @@ $(document).ready(function ($) {
 		$('[mark]').on('click', function () {
 			var c = $('.hisdata').length;
 			for (var i = 0; i < c; i++) {
-				$('.hisdata')[i].remove();
+				$('.hisdata')[0].remove();
 			}
 			// query data
 			var val = function (intxt, obj, objname) {

@@ -37,9 +37,11 @@
         set telephone(c) { this.saveAndGet('_telephone', 'Telephone', c); }, get telephone() { return this._telephone.content; },
         set mobile(c) { this.saveAndGet('_mobile', 'Mobile', c); }, get mobile() { return this._mobile.content; },
         set handletype(c) { this.saveAndGet('_handletype', 'HandleType', c); }, get handletype() { return this._handletype.content; },
-        set memo(c) { _memo = c; }, get memo() { return this._memo; }
+        set memo(c) { this._memo = c; }, get memo() { return this._memo; }
     };
     window.insertRecord = function (r, cb) {
+        // const Client = AV.Object.extend('Client');
+       //  const client = new Client();
         const Affair = AV.Object.extend('Affair');
         const affair = new Affair();
         console.log(r);
@@ -52,6 +54,7 @@
             handletype: r.handletype,
             memo: r.memo
         };
+        // client.save({desc:r.client});
         affair.save(obj).then(cb, function (err) {
             console.log(err);
         });
