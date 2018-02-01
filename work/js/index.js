@@ -125,7 +125,7 @@ $(document).ready(function ($) {
 		
 	typeaheads.forEach(function(tah) {
 		// console.log(tah);
-		$.post('data/' + tah[0], '', function(data){
+		$.get('data/' + tah[0], '', function(data){
 			// data = data.replace('\n', '');
 			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
