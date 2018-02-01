@@ -14,37 +14,44 @@ function unique(arr) {
 $(document).ready(function ($) {
 
 	$('#insert').click(function () {
-		record.insert(
-			$('#clientname').val(),
-			$('#clienttype').val(),
-			$('#interface').val(),
-			$('#telephone').val(),
-			$('#phone').val(),
-			$('#group').val(),
-			$('#comment').val(),
-			function (ret) {
-				$('#myModal').modal();
-			}
-		)
+		var r = new record();
+
+		r.client = $('#clientname').val();
+		r.asktype = $('#clienttype').val();
+		r.contact = $('#interface').val();
+		r.telephone = $('#telephone').val();
+		r.mobile = $('#phone').val();
+		r.handletype = $('#group').val();
+		r.memo = $('#comment').val();
+
+		insertRecord(r, function (ret) {
+			$('#myModal').modal();
+		}
+		);
 	});
+
+	// console.log(dataitem);
 	
-	console.log(dataitem);
-		
-	record.getRecord(function(result){
+	getRecord(function (result) {
+		var val = function (intxt, obj, objname) {
+			return intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj.get(objname) || "无记录");
+		}
+		// console.log(result);
 		var dataitem = $('#dataitem').text();
-		for(var i = 0;i<result.length;i++){
+		for (var i = 0; i < result.length; i++) {
 			var di = dataitem;
-			// console.log(result[i]);
-			for(var k in result[i].attributes){
-				var r = new RegExp('{' + k + '}', 'ig');
-				di = di.replace(r, result[i].attributes[k]);
-			}
-			console.log(result[i]);
+			di = val(di, result[i], 'client');
+			di = val(di, result[i], 'asktype');
+			di = val(di, result[i], 'telephone');
+			di = val(di, result[i], 'mobile');
+			di = val(di, result[i], 'handletype');
+			di = di.replace(/{memo}/ig, result[i].get('memo'));
+			di = val(di, result[i], 'contact');
 			di = di.replace(/{time}/g, result[i].createdAt.toLocaleString());
 			$('#hisdata').append(di);
 		}
 	});
-	
+
 	var regions = []
 	var pos = [];
 	var eachsub = function (item) {
@@ -145,18 +152,61 @@ $(document).ready(function ($) {
 		});
 	});
 
-	// {%	if needclear %}
+	/*
 	$('#clientname').val('');
 	$('#clienttype').val('');
 	$('#clientinterface').val('');
 	$('#telephone').val('');
 	$('#phone').val('');
 	$('#group').val('');
-
-	// {% endif %}
-
 	$('#clientname').focus();
 	$('#clientname').select();
+	*/
+	// $('#his').append('<li><a href="#" date="' + new Date().toLocaleDateString() + '">' + new Date().toLocaleDateString() + '</a></li>');
+	server.lastdate(function (date) {
+		console.log('lastdate');
+		var now = new Date();
+		var count = now.getDate() - date.getDate() + 1;
+		// count = 5;
+		for (var i = 0; i < count; i++) {
+			var d = new Date();
+			d.setDate(now.getDate() - i);
+			var datev = d.toLocaleDateString();
+			$('#his').append('<li><a href="#" mark="-' + i + '" >' + datev + '</a></li>');
+		}
+		$('[mark]').on('click', function () {
+			var c = $('.hisdata').length;
+			for (var i = 0; i < c; i++) {
+				$('.hisdata')[i].remove();
+			}
+			// query data
+			var val = function (intxt, obj, objname) {
+				var v =  intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj[objname] || "无记录");
+				// console.log(v);
+				return v;
+			}
+			server.items(parseInt(this.getAttribute('mark')), function (result) {
+								// console.log(result);	
+				
+				for (var i = 0; i < result.items.length; i++) {
+					// console.log(result.items[i]);
+					var ditem = $('#dataitem').text();
+					var di = ditem;
+					
+					di = val(di, result.items[i], 'client');
+					di = val(di, result.items[i], 'asktype');
+					di = val(di, result.items[i], 'telephone');
+					di = val(di, result.items[i], 'mobile');
+					di = val(di, result.items[i], 'handletype');
+					di = di.replace(/{memo}/g, result.items[i].memo);
+					di = val(di, result.items[i], 'contact');
+					di = di.replace(/{time}/g, result.items[i].createdAt.toLocaleString());
+					// console.log(di);
+					$('#hisdata').append(di);
+				}
+			})
+		});
+	});
 });
 // $('#clientname').attr('data-original-title', '{{error}}')
 // $('#clientname').attr('data-toggle', 'tooltip')

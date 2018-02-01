@@ -42,7 +42,7 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<!--Sidebar content-->
-				<ul class="nav nav-pills nav-stacked">
+				<ul class="nav nav-pills nav-stacked" id="his">
 					<li class="nav-header">HISTORY</li>
 				</ul>
 			</div>
@@ -62,12 +62,12 @@
 			<div class="span10" style="padding-bottom: 50px;">
 				<div class="form-inline" id="newline">
 					<div>
-						<input id="clientname" type="text" class="input-medium" placeholder="客户名称" />
-						<input id="clienttype" type="text" class="input-small" placeholder="种类" />
-						<input id="interface" type="text" class="input-small" placeholder="联系人姓名" />
-						<input id="telephone" type="text" class="input-small" placeholder="电话" />
-						<input id="phone" type="text" class="input-small" placeholder="手机" />
-						<input id="group" type="text" class="input-small" placeholder="处理分类" />
+						<input id="clientname" type="text" class="input-medium" placeholder="客户名称" value="测试的一个区域"/>
+						<input id="clienttype" type="text" class="input-small" placeholder="种类" value="测试种类"/>
+						<input id="interface" type="text" class="input-small" placeholder="联系人姓名" value="测试的联系人"/>
+						<input id="telephone" type="text" class="input-small" placeholder="电话" value="80080080"/>
+						<input id="phone" type="text" class="input-small" placeholder="手机" value="13600000000"/>
+						<input id="group" type="text" class="input-small" placeholder="处理分类" value="测试处理"/>
 						<!-- 保修/维护/巡�?� -->
 						<button type="submit" class="btn btn-info" id="insert">
 							<i class="icon-plus icon-white"></i>
@@ -90,7 +90,7 @@
 							<td width="60px">处理分类</td>
 							<td>备注</td>
 						</tr>
-
+ 
 					</thead>
 				</table>
 			</div>
@@ -98,7 +98,7 @@
 	</div>
 </body>
 <script type="text/template" id="dataitem">
-<tr>
+<tr class="hisdata">
 	<td><code>{time}</code></td>
 	<td><div class="column" title="{client}">{client}</div></td>
 	<td><div class="column" title="{asktype}">{asktype}</div></td>
