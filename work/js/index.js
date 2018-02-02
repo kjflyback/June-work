@@ -119,7 +119,7 @@ $(document).ready(function ($) {
 						}
 
 					});
-					var retdata = unique(retdata).concat(regions);
+					var retdata = unique(retdata);
 					return retdata;
 				},
 				highlighter: function (item, val) {
