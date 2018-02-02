@@ -28,6 +28,7 @@
         _mobile: { id: 0, content: '' },
         _handletype: { id: 0, content: '' },
         _memo: '',
+        _place:'',
         saveAndGet: function (target, className, c) {
             this[target].content = c;
         },
@@ -37,7 +38,8 @@
         set telephone(c) { this.saveAndGet('_telephone', 'Telephone', c); }, get telephone() { return this._telephone.content; },
         set mobile(c) { this.saveAndGet('_mobile', 'Mobile', c); }, get mobile() { return this._mobile.content; },
         set handletype(c) { this.saveAndGet('_handletype', 'HandleType', c); }, get handletype() { return this._handletype.content; },
-        set memo(c) { this._memo = c; }, get memo() { return this._memo; }
+        set memo(c) { this._memo = c; }, get memo() { return this._memo; },
+        set place(c){this._place = c;}, get place() {return this._place;}
     };
     window.insertRecord = function (r, cb) {
         // const Client = AV.Object.extend('Client');
@@ -52,7 +54,8 @@
             telephone: r.telephone,
             mobile: r.mobile,
             handletype: r.handletype,
-            memo: r.memo
+            memo: r.memo,
+            place:r.place
         };
         // client.save({desc:r.client});
         affair.save(obj).then(cb, function (err) {
@@ -121,6 +124,7 @@
                         mobile: result[i].get('mobile'),
                         handletype: result[i].get('handletype'),
                         memo: result[i].get('memo'),
+                        place:result[i].get('place'),
                         createdAt: result[i].createdAt
                     };
                     data.push(item);

@@ -21,6 +21,7 @@ $(document).ready(function ($) {
 		$('#phone').val('');
 		$('#group').val('');
 		$('#comment').val('');
+		$('#place').val('');
 		$('#clientname').focus();
 		$('#clientname').select();
 	}
@@ -39,7 +40,8 @@ $(document).ready(function ($) {
 		di = val(di, data, 'telephone');
 		di = val(di, data, 'mobile');
 		di = val(di, data, 'handletype');
-		di = di.replace(/{memo}/ig, data.get('memo'));
+		di = di.replace(/{memo}/g, data.get('memo'));
+		di = di.replace(/{place}/g, data.get('place'));
 		di = val(di, data, 'contact');
 		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
 		$('#hisdata').append(di);
@@ -57,7 +59,7 @@ $(document).ready(function ($) {
 		r.mobile = $('#phone').val();
 		r.handletype = $('#group').val();
 		r.memo = $('#comment').val();
-
+		r.place = $('#place').val();
 		insertRecord(r, function (ret) {
 			appendNewItem(ret);
 			clear();
@@ -83,7 +85,7 @@ $(document).ready(function ($) {
 		// console.log(prefix + item.name);
 		if (item.name == '请选择') return;
 		if (item.name == '其他') return;
-		regions.push(prefix + item.name);
+		regions.push(prefix +'/'+ item.name);
 		pos.push(item.name);
 		if (item.sub)
 			item.sub.forEach(eachsub);
@@ -93,7 +95,7 @@ $(document).ready(function ($) {
 	var commentPart = {};
 	var typeaheads =
 		[
-
+			[regions, 'place'],
 			['client.json', 'clientname', {
 				source: function (data) {
 					var retdata = [];
@@ -138,7 +140,7 @@ $(document).ready(function ($) {
 				}
 			}],
 			// ['client.json', 'clientname'],
-
+			
 			['type.json', 'clienttype'],
 			['interface.json', 'interface'],
 			['tel.json', 'telephone'],
@@ -149,7 +151,7 @@ $(document).ready(function ($) {
 
 	typeaheads.forEach(function (tah) {
 		// console.log(tah);
-		$.get('data/' + tah[0], '', function (data) {
+		var ahead=function(data){
 			// data = data.replace('\n', '');
 			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
@@ -176,7 +178,12 @@ $(document).ready(function ($) {
 					return item
 				}
 			});
-		});
+		}
+		if(typeof tah[0] == 'object'){
+			ahead(tah[0]);
+		}else{
+			$.get('data/' + tah[0], '', ahead);
+		}
 	});
 
 
@@ -196,6 +203,7 @@ $(document).ready(function ($) {
 		di = valserver(di, data, 'mobile');
 		di = valserver(di, data, 'handletype');
 		di = di.replace(/{memo}/g, data.memo);
+		di = di.replace(/{place}/g, data.place);
 		di = valserver(di, data, 'contact');
 		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
 		// console.log(di);
