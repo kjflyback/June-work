@@ -22,8 +22,8 @@ $(document).ready(function ($) {
 		$('#group').val('');
 		$('#comment').val('');
 		$('#place').val('');
-		$('#clientname').focus();
-		$('#clientname').select();
+		$('#place').focus();
+		$('#place').select();
 	}
 
 	clear();
