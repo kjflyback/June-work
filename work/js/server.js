@@ -41,7 +41,7 @@
     };
     window.insertRecord = function (r, cb) {
         // const Client = AV.Object.extend('Client');
-       //  const client = new Client();
+        //  const client = new Client();
         const Affair = AV.Object.extend('Affair');
         const affair = new Affair();
         console.log(r);
@@ -82,14 +82,14 @@
             var AffairQuery = new AV.Query('Affair');
             AffairQuery.count().then(cb);
         },
-        lastdate:function(cb){
+        lastdate: function (cb) {
             var AffairQuery = new AV.Query('Affair');
-            AffairQuery.descending('createdAt');
-            AffairQuery.first().then(function(s){
+            // AffairQuery.descending('createdAt');
+            AffairQuery.first().then(function (s) {
                 cb(s.createdAt);
             });
         },
-        normalize:function(date, day){
+        normalize: function (date, day) {
             var d = new Date();
             var s = d.toLocaleDateString()
             d = new Date(s + ' 00:00:00');
@@ -107,25 +107,25 @@
             var endDateQuery = new AV.Query('Affair');
             d = server.normalize(new Date(), day + 1);
             endDateQuery.lessThanOrEqualTo('createdAt', d);
-            
+
             console.log('<' + d.toLocaleString());
             var query = AV.Query.and(startDateQuery, endDateQuery);
-            query.find().then(function(result){
+            query.find().then(function (result) {
                 var data = [];
-                for(var i = 0;i<result.length;i++){
+                for (var i = 0; i < result.length; i++) {
                     var item = {
-                        client:result[i].get('client'),
-                        asktype:result[i].get('asktype'),
-                        contact:result[i].get('contact'),
-                        telephone:result[i].get('telephone'),
-                        mobile:result[i].get('mobile'),
-                        handletype:result[i].get('handletype'),
-                        memo:result[i].get('memo'),
-                        createdAt:result[i].createdAt
+                        client: result[i].get('client'),
+                        asktype: result[i].get('asktype'),
+                        contact: result[i].get('contact'),
+                        telephone: result[i].get('telephone'),
+                        mobile: result[i].get('mobile'),
+                        handletype: result[i].get('handletype'),
+                        memo: result[i].get('memo'),
+                        createdAt: result[i].createdAt
                     };
                     data.push(item);
                 }
-                cb({day:day, items:data});
+                cb({ day: day, items: data });
             });
         }
     };

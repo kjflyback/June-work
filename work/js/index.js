@@ -13,6 +13,40 @@ function unique(arr) {
 }
 $(document).ready(function ($) {
 
+	var clear = function () {
+		$('#clientname').val('');
+		$('#clienttype').val('');
+		$('#interface').val('');
+		$('#telephone').val('');
+		$('#phone').val('');
+		$('#group').val('');
+		$('#comment').val('');
+		$('#clientname').focus();
+		$('#clientname').select();
+	}
+
+	clear();
+
+	var val = function (intxt, obj, objname) {
+		return intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj.get(objname) || "无记录");
+	}
+	// console.log(result);
+	var dataitem = $('#dataitem').text();
+	var appendNewItem = function (data) {
+		var di = dataitem;
+		di = val(di, data, 'client');
+		di = val(di, data, 'asktype');
+		di = val(di, data, 'telephone');
+		di = val(di, data, 'mobile');
+		di = val(di, data, 'handletype');
+		di = di.replace(/{memo}/ig, data.get('memo'));
+		di = val(di, data, 'contact');
+		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		$('#hisdata').append(di);
+
+	}
+
+
 	$('#insert').click(function () {
 		var r = new record();
 
@@ -25,32 +59,22 @@ $(document).ready(function ($) {
 		r.memo = $('#comment').val();
 
 		insertRecord(r, function (ret) {
-			$('#myModal').modal();
+			appendNewItem(ret);
+			clear();
+			// $('#myModal').modal();
+
 		}
 		);
 	});
 
 	// console.log(dataitem);
-	
+	/*
 	getRecord(function (result) {
-		var val = function (intxt, obj, objname) {
-			return intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj.get(objname) || "无记录");
-		}
-		// console.log(result);
-		var dataitem = $('#dataitem').text();
 		for (var i = 0; i < result.length; i++) {
-			var di = dataitem;
-			di = val(di, result[i], 'client');
-			di = val(di, result[i], 'asktype');
-			di = val(di, result[i], 'telephone');
-			di = val(di, result[i], 'mobile');
-			di = val(di, result[i], 'handletype');
-			di = di.replace(/{memo}/ig, result[i].get('memo'));
-			di = val(di, result[i], 'contact');
-			di = di.replace(/{time}/g, result[i].createdAt.toLocaleString());
-			$('#hisdata').append(di);
+			appendNewItem(result[i]);
 		}
 	});
+	*/
 
 	var regions = []
 	var pos = [];
@@ -69,7 +93,7 @@ $(document).ready(function ($) {
 	var commentPart = {};
 	var typeaheads =
 		[
-			
+
 			['client.json', 'clientname', {
 				source: function (data) {
 					var retdata = [];
@@ -77,7 +101,7 @@ $(document).ready(function ($) {
 					// console.log(data);
 					data.forEach(function (itemx) {
 						// console.log(itemx);
-						
+
 						var item = [itemx, itemx];
 						retdata.push(item[0])
 						if (!commentPart[item[0]])
@@ -114,18 +138,18 @@ $(document).ready(function ($) {
 				}
 			}],
 			// ['client.json', 'clientname'],
-			
+
 			['type.json', 'clienttype'],
 			['interface.json', 'interface'],
 			['tel.json', 'telephone'],
 			['phone.json', 'phone'],
 			['group.json', 'group']
-			
+
 		];
-		
-	typeaheads.forEach(function(tah) {
+
+	typeaheads.forEach(function (tah) {
 		// console.log(tah);
-		$.get('data/' + tah[0], '', function(data){
+		$.get('data/' + tah[0], '', function (data) {
 			// data = data.replace('\n', '');
 			// data = data.replace('\r', '');
 			$('#' + tah[1]).typeahead({
@@ -155,21 +179,33 @@ $(document).ready(function ($) {
 		});
 	});
 
-	
-	$('#clientname').val('');
-	$('#clienttype').val('');
-	$('#interface').val('');
-	$('#telephone').val('');
-	$('#phone').val('');
-	$('#group').val('');
-	$('#clientname').focus();
-	$('#clientname').select();
-	
+
+
 	// $('#his').append('<li><a href="#" date="' + new Date().toLocaleDateString() + '">' + new Date().toLocaleDateString() + '</a></li>');
+	var valserver = function (intxt, obj, objname) {
+		var v = intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj[objname] || "无记录");
+		// console.log(v);
+		return v;
+	}
+	var appendServerItem = function (data) {
+
+		var di = dataitem;
+		di = valserver(di, data, 'client');
+		di = valserver(di, data, 'asktype');
+		di = valserver(di, data, 'telephone');
+		di = valserver(di, data, 'mobile');
+		di = valserver(di, data, 'handletype');
+		di = di.replace(/{memo}/g, data.memo);
+		di = valserver(di, data, 'contact');
+		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		// console.log(di);
+		$('#hisdata').append(di);
+	}
 	server.lastdate(function (date) {
-		console.log('lastdate');
+		console.log(date);
 		var now = new Date();
 		var count = now.getDate() - date.getDate() + 1;
+		console.log(count);
 		// count = 5;
 		for (var i = 0; i < count; i++) {
 			var d = new Date();
@@ -182,34 +218,22 @@ $(document).ready(function ($) {
 			for (var i = 0; i < c; i++) {
 				$('.hisdata')[0].remove();
 			}
-			// query data
-			var val = function (intxt, obj, objname) {
-				var v =  intxt.replace(new RegExp('{' + objname + '}', 'ig'), obj[objname] || "无记录");
-				// console.log(v);
-				return v;
-			}
+			// query data		
+
 			server.items(parseInt(this.getAttribute('mark')), function (result) {
-								// console.log(result);	
-				
+				// console.log(result);	
 				for (var i = 0; i < result.items.length; i++) {
-					// console.log(result.items[i]);
-					var ditem = $('#dataitem').text();
-					var di = ditem;
-					
-					di = val(di, result.items[i], 'client');
-					di = val(di, result.items[i], 'asktype');
-					di = val(di, result.items[i], 'telephone');
-					di = val(di, result.items[i], 'mobile');
-					di = val(di, result.items[i], 'handletype');
-					di = di.replace(/{memo}/g, result.items[i].memo);
-					di = val(di, result.items[i], 'contact');
-					di = di.replace(/{time}/g, result.items[i].createdAt.toLocaleString());
-					// console.log(di);
-					$('#hisdata').append(di);
+					appendServerItem(result.items[i]);
 				}
-			})
+			});
 		});
 	});
+	server.items(0, function (result) {
+		// console.log(result);	
+		for (var i = 0; i < result.items.length; i++) {
+			appendServerItem(result.items[i]);
+		}
+	})
 });
 // $('#clientname').attr('data-original-title', '{{error}}')
 // $('#clientname').attr('data-toggle', 'tooltip')
