@@ -12,7 +12,13 @@ function unique(arr) {
 	//http://www.cnblogs.com/sosoft/
 }
 $(document).ready(function ($) {
-
+	// $.fn.editable.defaults.mode = 'inline';
+	var handletypesource = [];
+	$.get('data/group.json', {}, function(data){
+		data.forEach(function(e){
+			handletypesource.push({value:e, text:e});
+		});
+	});
 	var clear = function () {
 		$('#clientname').val('');
 		$('#clienttype').val('');
@@ -44,8 +50,17 @@ $(document).ready(function ($) {
 		di = di.replace(/{place}/g, data.get('place'));
 		di = val(di, data, 'contact');
 		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		di = di.replace(/{id}/g, data.id);
 		$('#hisdata').append(di);
-
+		$('[target-key="handletype"]').editable({source:handletypesource});
+		$('.hisdata .ed').editable();
+		
+		
+		$('.hisdata .edsave').off('save');
+		$('.hisdata .edsave').on('save', function(e, q){
+			var obj = this;			
+			server.update($(obj).attr('target-id'), $(obj).attr('target-key'), q.newValue);
+		});
 	}
 
 
@@ -206,8 +221,17 @@ $(document).ready(function ($) {
 		di = di.replace(/{place}/g, data.place);
 		di = valserver(di, data, 'contact');
 		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		di = di.replace(/{id}/g, data.id);
 		// console.log(di);
 		$('#hisdata').append(di);
+		$('[target-key="handletype"]').editable({source:handletypesource});
+		$('.hisdata .ed').editable();
+		
+		$('.hisdata .edsave').off('save');
+		$('.hisdata .edsave').on('save', function(e, q){
+			var obj = this;			
+			server.update($(obj).attr('target-id'), $(obj).attr('target-key'), q.newValue);
+		});
 	}
 	server.lastdate(function (date) {
 		console.log(date);
@@ -218,8 +242,9 @@ $(document).ready(function ($) {
 		for (var i = 0; i < count; i++) {
 			var d = new Date();
 			d.setDate(now.getDate() - i);
-			var datev = d.toLocaleDateString();
-			$('#his').append('<li><a href="#" mark="-' + i + '" >' + datev + '</a></li>');
+			var datev = d.toLocaleDateString().split('/');
+			var dv = [datev[1], datev[2]];
+			$('#his').append('<li><a href="#" mark="-' + i + '" >' + dv.join('/') + '</a></li>');
 		}
 		$('[mark]').on('click', function () {
 			var c = $('.hisdata').length;

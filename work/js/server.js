@@ -102,6 +102,11 @@
             ret = new Date(ret.toLocaleDateString() + ' 00:00:00');
             return ret;
         },
+        update:function(id, key, val){
+            var AffairQuery = AV.Object.createWithoutData('Affair', id);
+            AffairQuery.set(key, val);
+            AffairQuery.save();
+        },
         items: function (day, cb) {
             var startDateQuery = new AV.Query('Affair');
             var d = server.normalize(new Date(), day);
@@ -125,7 +130,8 @@
                         handletype: result[i].get('handletype'),
                         memo: result[i].get('memo'),
                         place:result[i].get('place'),
-                        createdAt: result[i].createdAt
+                        createdAt: result[i].createdAt,
+                        id:result[i].id
                     };
                     data.push(item);
                 }
