@@ -1,0 +1,11 @@
+[
+    {value:"维护", text:"维护"},
+    {value:"回访",text:"回访"},
+    {value:"接口联系",text:"接口联系"},
+    {value:"测试",text:"测试"},
+    {value:"设备检修",text:"设备检修"},
+    {value:"咨询",text:"咨询"},
+    {value:"培训",text:"培训"},
+    {value:"系统更新",text:"系统更新"},
+    {value:"扩展功能",text:"扩展功能"}
+]
