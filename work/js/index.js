@@ -49,7 +49,7 @@ $(document).ready(function ($) {
 		di = di.replace(/{memo}/g, data.get('memo'));
 		di = di.replace(/{place}/g, data.get('place'));
 		di = val(di, data, 'contact');
-		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		di = di.replace(/{time}/g, data.createdAt.toLocaleTimeString());
 		di = di.replace(/{id}/g, data.id);
 		$('#hisdata').append(di);
 		$('[target-key="handletype"]').editable({source:handletypesource});
@@ -220,7 +220,7 @@ $(document).ready(function ($) {
 		di = di.replace(/{memo}/g, data.memo);
 		di = di.replace(/{place}/g, data.place);
 		di = valserver(di, data, 'contact');
-		di = di.replace(/{time}/g, data.createdAt.toLocaleString());
+		di = di.replace(/{time}/g, data.createdAt.toLocaleTimeString());
 		di = di.replace(/{id}/g, data.id);
 		// console.log(di);
 		$('#hisdata').append(di);
