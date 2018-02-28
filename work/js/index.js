@@ -19,6 +19,29 @@ $(document).ready(function ($) {
 			handletypesource.push({value:e, text:e});
 		});
 	});
+
+	var binding = function(){
+
+		server.project.refresh(function(result){
+			console.log(result);
+			var src = [];
+			for(var i = 0;i<result.length;i++){
+				src.push(result[i].get('name'));
+			}
+			$('[target-key="asktype"]').editable({
+				source: src
+			});
+		});
+		
+		$('[target-key="handletype"]').editable({source:handletypesource});
+		$('.hisdata .ed').editable();
+		
+		$('.hisdata .edsave').off('save');
+		$('.hisdata .edsave').on('save', function(e, q){
+			var obj = this;			
+			server.update($(obj).attr('target-id'), $(obj).attr('target-key'), q.newValue);
+		});
+	}
 	var clear = function () {
 		$('#clientname').val('');
 		$('#clienttype').val('');
@@ -52,15 +75,7 @@ $(document).ready(function ($) {
 		di = di.replace(/{time}/g, data.createdAt.toLocaleTimeString());
 		di = di.replace(/{id}/g, data.id);
 		$('#hisdata').append(di);
-		$('[target-key="handletype"]').editable({source:handletypesource});
-		$('.hisdata .ed').editable();
 		
-		
-		$('.hisdata .edsave').off('save');
-		$('.hisdata .edsave').on('save', function(e, q){
-			var obj = this;			
-			server.update($(obj).attr('target-id'), $(obj).attr('target-key'), q.newValue);
-		});
 	}
 
 
@@ -77,9 +92,10 @@ $(document).ready(function ($) {
 		r.place = $('#place').val();
 		insertRecord(r, function (ret) {
 			appendNewItem(ret);
+			binding();
 			clear();
 			// $('#myModal').modal();
-
+			
 		}
 		);
 	});
@@ -92,7 +108,12 @@ $(document).ready(function ($) {
 		}
 	});
 	*/
-
+	var project = [];
+	server.project.refresh(function(result){
+		for(var i = 0;i<result.length;i++){
+			project.push(result[i].get('name'));
+		}
+	});
 	var regions = []
 	var pos = [];
 	var eachsub = function (item) {
@@ -156,7 +177,7 @@ $(document).ready(function ($) {
 			}],
 			// ['client.json', 'clientname'],
 			
-			['type.json', 'clienttype'],
+			[/*'type.json'*/project, 'clienttype'],
 			['interface.json', 'interface'],
 			['tel.json', 'telephone'],
 			['phone.json', 'phone'],
@@ -224,14 +245,8 @@ $(document).ready(function ($) {
 		di = di.replace(/{id}/g, data.id);
 		// console.log(di);
 		$('#hisdata').append(di);
-		$('[target-key="handletype"]').editable({source:handletypesource});
-		$('.hisdata .ed').editable();
 		
-		$('.hisdata .edsave').off('save');
-		$('.hisdata .edsave').on('save', function(e, q){
-			var obj = this;			
-			server.update($(obj).attr('target-id'), $(obj).attr('target-key'), q.newValue);
-		});
+		
 	}
 	server.lastdate(function (date) {
 		console.log(date);
@@ -258,6 +273,7 @@ $(document).ready(function ($) {
 				for (var i = 0; i < result.items.length; i++) {
 					appendServerItem(result.items[i]);
 				}
+				binding();
 			});
 		});
 	});
@@ -266,6 +282,7 @@ $(document).ready(function ($) {
 		for (var i = 0; i < result.items.length; i++) {
 			appendServerItem(result.items[i]);
 		}
+		binding();
 	})
 });
 // $('#clientname').attr('data-original-title', '{{error}}')

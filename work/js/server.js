@@ -81,6 +81,24 @@
         })
     };
     window.server = {
+        project:{
+            count:0,
+            refresh:function(cb){
+                var Project = new AV.Query('Project');
+                Project.count().then(function(d){
+                    this.count = d;
+                });
+                Project.find().then(cb);
+                // cb([{get:function(){return "河南bmp";}},{get:function(){return "河北bmp"}}]);
+            },
+            addnew:function(n,s){
+                var Proj = new AV.Object('Project');
+                Proj.set('name', n);
+                Proj.save().then(function(su){
+                    if(s) s(su);
+                });
+            }
+        },
         count: function (cb) {
             var AffairQuery = new AV.Query('Affair');
             AffairQuery.count().then(cb);
@@ -103,9 +121,22 @@
             return ret;
         },
         update:function(id, key, val){
+            console.log(key + ' = ' + val);
             var AffairQuery = AV.Object.createWithoutData('Affair', id);
             AffairQuery.set(key, val);
             AffairQuery.save();
+            if(key != 'asktype') return;
+            
+            var Proj = new AV.Query('Project');
+            Proj.equalTo('name', val);
+            Proj.find().then(function(s){
+                if(s.length == 0){
+                    server.project.addnew(val);
+                }
+            },function(er){
+                // 没有则加入
+                server.project.addnew(val);
+            });
         },
         items: function (day, cb) {
             var startDateQuery = new AV.Query('Affair');

@@ -8,10 +8,20 @@
 
 	<link href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="js/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="style/locate.css" rel="stylesheet">
+	<link href="style/locate.css" rel="stylesheet">
+	<script src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
 </head>
-<body>
+<body class="container">
 <h1>项目处理</h1>
-
+<h3 id="username"></h3>
+<div class="row-fluid" id="projectlist">
+	
+</div>
+<script type="text/template" id="itemtmp">
+		<div class="span1 projectchecker" item="{itemid}">{itemtext}</div>
+</script>
+<script src="js/jquery/jquery.min.js"></script>
+<script src="js/server.js"></script>
+<script src="js/locate.js"></script>
 </body>
 </html>
