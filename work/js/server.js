@@ -8,6 +8,7 @@
         appId: APP_ID,
         appKey: APP_KEY
     });
+    
     window.record = function () {
     };
     window.getid = function (className, content, cb) {
@@ -44,9 +45,18 @@
     window.insertRecord = function (r, cb) {
         // const Client = AV.Object.extend('Client');
         //  const client = new Client();
+        var Proj = new AV.Query('Project');
+            Proj.equalTo('name', r.asktype);
+            Proj.find().then(function(s){
+                if(s.length == 0){
+                    server.project.addnew(r.asktype);
+                }
+            });
+
         const Affair = AV.Object.extend('Affair');
         const affair = new Affair();
         console.log(r);
+        var currentUser = AV.User.current();
         var obj = {
             client: r.client,
             asktype: r.asktype,
@@ -55,7 +65,8 @@
             mobile: r.mobile,
             handletype: r.handletype,
             memo: r.memo,
-            place:r.place
+            place:r.place,
+            uid:currentUser
         };
         // client.save({desc:r.client});
         affair.save(obj).then(cb, function (err) {
@@ -81,14 +92,52 @@
         })
     };
     window.server = {
+        logout:function(){
+            var currentUser = AV.User.current();
+            if(currentUser)
+                AV.User.logOut();
+        },
+        markProject:function(prjid, cb, err){
+            var currentUser = AV.User.current();
+            if(!currentUser){
+                return;
+            }
+            var userAction = new AV.Object('UserAction');
+            var Project = new AV.Object.createWithoutData('Project', prjid);
+            Project.fetch().then(function(){
+                userAction.set('uid', currentUser);
+                userAction.set('project', Project);
+                userAction.save().then(function(d){
+                    if(cb){
+                        cb(d);
+                    }
+                },function(e){
+                    if(err) err(e);
+                });
+            });            
+        },
         project:{
             count:0,
-            refresh:function(cb){
+            refresh:function(cb, cbUsrPrj){
                 var Project = new AV.Query('Project');
                 Project.count().then(function(d){
                     this.count = d;
                 });
                 Project.find().then(cb);
+                var currentUser = AV.User.current();
+                if(currentUser){
+                    var currentProj = new AV.Query('UserAction');
+                    currentProj.descending('createdAt');
+                    currentProj.include('project');                    
+                    currentProj.equalTo('uid', currentUser);
+                    currentProj.limit(1);
+                    currentProj.find().then(function(d){
+                        console.log(d);
+                        if(cbUsrPrj){
+                            cbUsrPrj(d[0]);
+                        }
+                    });
+                }
                 // cb([{get:function(){return "河南bmp";}},{get:function(){return "河北bmp"}}]);
             },
             addnew:function(n,s){

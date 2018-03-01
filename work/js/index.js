@@ -12,6 +12,10 @@ function unique(arr) {
 	//http://www.cnblogs.com/sosoft/
 }
 $(document).ready(function ($) {
+	var currentUser = AV.User.current();
+    if(!currentUser){
+        document.location.href = "../index.html";
+    }
 	// $.fn.editable.defaults.mode = 'inline';
 	var handletypesource = [];
 	$.get('data/group.json', {}, function(data){
@@ -249,9 +253,11 @@ $(document).ready(function ($) {
 		
 	}
 	server.lastdate(function (date) {
-		console.log(date);
+		console.log('lastdate');
+		console.log(date.toLocaleDateString());
 		var now = new Date();
-		var count = now.getDate() - date.getDate() + 1;
+		var days = now.getTime() - date.getTime();
+		var count = parseInt(days / (1000 * 60 * 60 * 24));
 		console.log(count);
 		// count = 5;
 		for (var i = 0; i < count; i++) {
