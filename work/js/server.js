@@ -130,11 +130,10 @@
                     currentProj.descending('createdAt');
                     currentProj.include('project');                    
                     currentProj.equalTo('uid', currentUser);
-                    currentProj.limit(1);
-                    currentProj.find().then(function(d){
+                    currentProj.first().then(function(d){
                         console.log(d);
                         if(cbUsrPrj){
-                            cbUsrPrj(d[0]);
+                            cbUsrPrj(d);
                         }
                     });
                 }
@@ -145,6 +144,14 @@
                 Proj.set('name', n);
                 Proj.save().then(function(su){
                     if(s) s(su);
+                });
+            },
+            remove:function(id, cb){
+                var Proj = AV.Object.createWithoutData('Project', id);
+                Proj.destroy().then(function(d){
+                    if(cb) cb(d);
+                },function(err){
+
                 });
             }
         },
@@ -183,7 +190,7 @@
                     server.project.addnew(val);
                 }
             },function(er){
-                // 没有则加入
+                // 没有则加�?
                 server.project.addnew(val);
             });
         },
