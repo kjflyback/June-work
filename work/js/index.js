@@ -265,7 +265,7 @@ $(document).ready(function ($) {
 			d.setDate(now.getDate() - i);
 			var datev = d.toLocaleDateString().split('/');
 			var dv = [datev[1], datev[2]];
-			$('#his').append('<li><a href="#" mark="-' + i + '" >' + dv.join('/') + '</a></li>');
+			$('#his').append('<span><a href="#" mark="-' + i + '" >' + dv.join('/') + '</a></span>');
 		}
 		$('[mark]').on('click', function () {
 			var c = $('.hisdata').length;
