@@ -1,8 +1,12 @@
 (function ($) {
     // ARLfDFch9OmH7CnGrAaL4Kiq-gzGzoHsz
     // uLp30boDaFhNCof4SK5az0n9
-    var APP_ID = 'ARLfDFch9OmH7CnGrAaL4Kiq-gzGzoHsz';
-    var APP_KEY = 'uLp30boDaFhNCof4SK5az0n9';
+    
+    // 2019
+    // WgBTgLgggicSSF1XP3mKVkBH-gzGzoHsz
+    // zWF8MHyl8D8ziYqPzPrQ5dlu
+    var APP_ID = 'WgBTgLgggicSSF1XP3mKVkBH-gzGzoHsz';
+    var APP_KEY = 'zWF8MHyl8D8ziYqPzPrQ5dlu';
 
     AV.init({
         appId: APP_ID,
@@ -137,7 +141,7 @@
                         }
                     });
                 }
-                // cb([{get:function(){return "河南bmp";}},{get:function(){return "河北bmp"}}]);
+                // cb([{get:function(){return "æ²³å—bmp";}},{get:function(){return "æ²³åŒ—bmp"}}]);
             },
             addnew:function(n,s){
                 var Proj = new AV.Object('Project');
@@ -190,7 +194,7 @@
                     server.project.addnew(val);
                 }
             },function(er){
-                // 没有则加�?
+                // æ²¡æœ‰åˆ™åŠ å…?
                 server.project.addnew(val);
             });
         },
